@@ -1,0 +1,51 @@
+@import "base";
+
+#searchResultsMainBlock {
+    h4.searchHeader {
+      margin: 25px 20px 15px;
+      font-family: Verdana;
+      color: #333;
+      cursor: pointer;
+
+      &::before {
+        .arrowDown(@mainArrowColor, 7px);
+        margin: 5px 3px 0 0;
+      }
+
+      &.open::before {
+        .arrowRight(@mainArrowColor, 7px);
+      }
+
+      &.nothingFound {
+        cursor: default;
+
+        &::before {
+          border-color: transparent;
+        }
+      }
+    }
+
+    .searchResults {
+      display: none;
+      margin: 0 15px;
+
+      &.visible {
+        display: block;
+      }
+
+      p {
+        margin: 20px;
+        font-style: italic;
+        font-family: Verdana;
+        color: #666;
+      }
+    }
+
+    .searchResultItem {
+      padding: 5px;
+
+      &:nth-child(odd) {
+        background-color: #fcfcfc;
+      }
+    }
+}

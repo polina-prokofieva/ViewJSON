@@ -1,0 +1,399 @@
+#searchResultsMainBlock h4.searchHeader {
+  margin: 25px 20px 15px;
+  font-family: Verdana;
+  color: #333;
+  cursor: pointer;
+}
+#searchResultsMainBlock h4.searchHeader::before {
+  float: left;
+  display: inline-block;
+  content: '';
+  width: 0;
+  height: 0;
+  border-style: solid;
+  background-color: transparent;
+  border-width: 7px 4.5px 0 4.5px;
+  border-color: #ccc transparent transparent transparent;
+  margin: 5px 3px 0 0;
+}
+#searchResultsMainBlock h4.searchHeader.open::before {
+  float: left;
+  display: inline-block;
+  content: '';
+  width: 0;
+  height: 0;
+  border-style: solid;
+  background-color: transparent;
+  border-width: 4.5px 0 4.5px 7px;
+  border-color: transparent transparent transparent #ccc;
+}
+#searchResultsMainBlock h4.searchHeader.nothingFound {
+  cursor: default;
+}
+#searchResultsMainBlock h4.searchHeader.nothingFound::before {
+  border-color: transparent;
+}
+#searchResultsMainBlock .searchResults {
+  display: none;
+  margin: 0 15px;
+}
+#searchResultsMainBlock .searchResults.visible {
+  display: block;
+}
+#searchResultsMainBlock .searchResults p {
+  margin: 20px;
+  font-style: italic;
+  font-family: Verdana;
+  color: #666;
+}
+#searchResultsMainBlock .searchResultItem {
+  padding: 5px;
+}
+#searchResultsMainBlock .searchResultItem:nth-child(odd) {
+  background-color: #fcfcfc;
+}
+#viewJSONActions {
+  width: 100%;
+  height: 40px;
+  padding: 10px;
+  margin-bottom: 10px;
+  background: rgba(185, 185, 200, 0.05);
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+#viewJSONActions input {
+  float: right;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  font-family: Verdana;
+  font-size: 10pt;
+  color: #f8f8ff;
+  border: 1px #538cc6 solid;
+  background-color: #538cc6;
+}
+#viewJSONActions input#hideAll {
+  float: left;
+  margin-right: 10px;
+  padding: 2px 10px;
+  color: #f8f8ff;
+}
+#viewJSONActions input[type="submit"] {
+  margin: 0 5px;
+}
+#viewJSONActions input[name="search"] {
+  padding: 2px 5px;
+  font-family: Verdana;
+  background-color: #fff;
+  color: #538cc6;
+}
+#viewJSONActions.closed {
+  width: 8px;
+  height: 7px;
+}
+#viewJSONActions.closed > * {
+  display: none;
+}
+#viewJSONActions.closed .close {
+  right: 4px;
+  top: 6px;
+}
+#viewJSONActions.closed .close:after {
+  float: left;
+  display: inline-block;
+  content: '';
+  width: 0;
+  height: 0;
+  border-style: solid;
+  background-color: transparent;
+  border-width: 7px 4.5px 0 4.5px;
+  border-color: #333 transparent transparent transparent;
+  margin: 5px 0 0 -15px;
+  transform: none;
+}
+#viewJSONActions.closed .close:before {
+  display: none;
+}
+#viewJSONActions .close {
+  position: absolute;
+  right: 15px;
+  top: 8px;
+  opacity: 0.3;
+}
+#viewJSONActions .close:hover {
+  opacity: 1;
+}
+#viewJSONActions .close:before,
+#viewJSONActions .close:after {
+  position: absolute;
+  content: ' ';
+  height: 10px;
+  width: 2px;
+  background-color: #333;
+}
+#viewJSONActions .close:before {
+  transform: rotate(45deg);
+}
+#viewJSONActions .close:after {
+  transform: rotate(-45deg);
+}
+#viewJsonMainBlock,
+#searchResultsMainBlock {
+  font-family: Courier New;
+  font-size: 11pt;
+}
+#viewJsonMainBlock p,
+#searchResultsMainBlock p {
+  margin: 0;
+  padding: 0;
+}
+#viewJsonMainBlock ul,
+#searchResultsMainBlock ul {
+  margin: 0 0 0 20px;
+  padding: 0;
+}
+#viewJsonMainBlock ul li,
+#searchResultsMainBlock ul li {
+  list-style: none;
+}
+#viewJsonMainBlock .dots,
+#searchResultsMainBlock .dots {
+  display: none;
+}
+#viewJsonMainBlock .sqbr,
+#searchResultsMainBlock .sqbr,
+#viewJsonMainBlock .brace,
+#searchResultsMainBlock .brace {
+  display: none;
+  font-weight: bold;
+}
+#viewJsonMainBlock .sqbr,
+#searchResultsMainBlock .sqbr {
+  color: #22d;
+}
+#viewJsonMainBlock .brace,
+#searchResultsMainBlock .brace {
+  color: #6a6;
+}
+#viewJsonMainBlock .array .arrayElements .element,
+#searchResultsMainBlock .array .arrayElements .element {
+  padding: 5px 0 0 0;
+}
+#viewJsonMainBlock .array .arrayElements .element:nth-child(odd),
+#searchResultsMainBlock .array .arrayElements .element:nth-child(odd) {
+  background-color: #fefefe;
+}
+#viewJsonMainBlock .array .arrayElements .element:nth-child(even),
+#searchResultsMainBlock .array .arrayElements .element:nth-child(even) {
+  background-color: #fcfcfc;
+}
+#viewJsonMainBlock .array .arrayElements .element > .object,
+#searchResultsMainBlock .array .arrayElements .element > .object {
+  min-height: 25px;
+  margin: 0;
+}
+#viewJsonMainBlock .array .arrayElements .element > .object > .key,
+#searchResultsMainBlock .array .arrayElements .element > .object > .key {
+  display: inline-block;
+  padding: 5px;
+  font-weight: bold;
+}
+#viewJsonMainBlock .array .arrayElements .element > .object > .key::before,
+#searchResultsMainBlock .array .arrayElements .element > .object > .key::before {
+  margin: 5px 5px 0 0;
+}
+#viewJsonMainBlock .array .arrayElements .element > .object > .objectProperties,
+#searchResultsMainBlock .array .arrayElements .element > .object > .objectProperties {
+  padding: 1px 20px 5px 30px;
+}
+#viewJsonMainBlock .array .arrayElements .element.hidden,
+#searchResultsMainBlock .array .arrayElements .element.hidden {
+  display: none;
+}
+#viewJsonMainBlock .array .arrayElementsVisibility,
+#searchResultsMainBlock .array .arrayElementsVisibility {
+  width: 100%;
+  height: 20px;
+  padding-bottom: 20px;
+}
+#viewJsonMainBlock .array .arrayElementsVisibility div,
+#searchResultsMainBlock .array .arrayElementsVisibility div {
+  display: inline-block;
+  float: right;
+  cursor: pointer;
+  margin: 0 10px;
+  font-family: Verdana;
+  font-size: 10pt;
+  color: #538cc6;
+  text-decoration: underline;
+}
+#viewJsonMainBlock .array .arrayElementsVisibility div.hidden,
+#searchResultsMainBlock .array .arrayElementsVisibility div.hidden {
+  display: none;
+}
+#viewJsonMainBlock span,
+#searchResultsMainBlock span {
+  display: inline-block;
+}
+#viewJsonMainBlock .object,
+#searchResultsMainBlock .object,
+#viewJsonMainBlock .array,
+#searchResultsMainBlock .array {
+  margin: 5px 0 5px 0;
+}
+#viewJsonMainBlock .object > .key,
+#searchResultsMainBlock .object > .key,
+#viewJsonMainBlock .array > .key,
+#searchResultsMainBlock .array > .key {
+  cursor: pointer;
+}
+#viewJsonMainBlock .object > .key::before,
+#searchResultsMainBlock .object > .key::before,
+#viewJsonMainBlock .array > .key::before,
+#searchResultsMainBlock .array > .key::before {
+  float: left;
+  display: inline-block;
+  content: '';
+  width: 0;
+  height: 0;
+  border-style: solid;
+  background-color: transparent;
+  border-width: 7px 4.5px 0 4.5px;
+  border-color: #ccc transparent transparent transparent;
+  margin: 5px 0 0 -15px;
+}
+#viewJsonMainBlock .object .dots,
+#searchResultsMainBlock .object .dots,
+#viewJsonMainBlock .array .dots,
+#searchResultsMainBlock .array .dots {
+  display: none;
+}
+#viewJsonMainBlock .object > .colon,
+#searchResultsMainBlock .object > .colon,
+#viewJsonMainBlock .array > .colon,
+#searchResultsMainBlock .array > .colon {
+  display: none;
+}
+#viewJsonMainBlock .object.visible > .key::before,
+#searchResultsMainBlock .object.visible > .key::before,
+#viewJsonMainBlock .array.visible > .key::before,
+#searchResultsMainBlock .array.visible > .key::before {
+  float: left;
+  display: inline-block;
+  content: '';
+  width: 0;
+  height: 0;
+  border-style: solid;
+  background-color: transparent;
+  border-width: 7px 4.5px 0 4.5px;
+  border-color: #ccc transparent transparent transparent;
+  margin: 5px 0 0 -15px;
+}
+#viewJsonMainBlock .object.visible ul,
+#searchResultsMainBlock .object.visible ul,
+#viewJsonMainBlock .array.visible ul,
+#searchResultsMainBlock .array.visible ul {
+  display: block;
+}
+#viewJsonMainBlock .object.invisible ul,
+#searchResultsMainBlock .object.invisible ul,
+#viewJsonMainBlock .array.invisible ul,
+#searchResultsMainBlock .array.invisible ul,
+#viewJsonMainBlock .object.invisible div,
+#searchResultsMainBlock .object.invisible div,
+#viewJsonMainBlock .array.invisible div,
+#searchResultsMainBlock .array.invisible div,
+#viewJsonMainBlock .object.invisible table,
+#searchResultsMainBlock .object.invisible table,
+#viewJsonMainBlock .array.invisible table,
+#searchResultsMainBlock .array.invisible table {
+  display: none;
+}
+#viewJsonMainBlock .object.invisible > .key::before,
+#searchResultsMainBlock .object.invisible > .key::before,
+#viewJsonMainBlock .array.invisible > .key::before,
+#searchResultsMainBlock .array.invisible > .key::before {
+  float: left;
+  display: inline-block;
+  content: '';
+  width: 0;
+  height: 0;
+  border-style: solid;
+  background-color: transparent;
+  border-width: 4.5px 0 4.5px 7px;
+  border-color: transparent transparent transparent #ccc;
+  margin: 5px 0 0 -15px;
+}
+#viewJsonMainBlock .object.invisible .dots,
+#searchResultsMainBlock .object.invisible .dots,
+#viewJsonMainBlock .array.invisible .dots,
+#searchResultsMainBlock .array.invisible .dots {
+  display: none;
+}
+#viewJsonMainBlock .string,
+#searchResultsMainBlock .string {
+  font-style: italic;
+  color: #7a0;
+}
+#viewJsonMainBlock .string .quot,
+#searchResultsMainBlock .string .quot {
+  display: none;
+}
+#viewJsonMainBlock .null,
+#searchResultsMainBlock .null {
+  font-style: italic;
+  color: #0aa;
+}
+#viewJsonMainBlock .key,
+#searchResultsMainBlock .key {
+  color: #538cc6;
+}
+#viewJsonMainBlock h3,
+#searchResultsMainBlock h3 {
+  margin: 5px 20px;
+  font-family: Verdana;
+  color: #666;
+}
+#viewJsonMainBlock table.arrayElements,
+#searchResultsMainBlock table.arrayElements {
+  color: #666;
+}
+#viewJsonMainBlock table.arrayElements thead,
+#searchResultsMainBlock table.arrayElements thead {
+  color: #fff;
+}
+#viewJsonMainBlock table.arrayElements thead th,
+#searchResultsMainBlock table.arrayElements thead th {
+  background-color: #777;
+  text-align: center;
+  padding: 5px 10px;
+}
+#viewJsonMainBlock table.arrayElements td,
+#searchResultsMainBlock table.arrayElements td {
+  padding: 5px;
+}
+#viewJsonMainBlock table.arrayElements tbody tr:nth-child(odd),
+#searchResultsMainBlock table.arrayElements tbody tr:nth-child(odd) {
+  background-color: #f6f6f6;
+}
+#viewJsonMainBlock table.arrayElements tbody tr:nth-child(even),
+#searchResultsMainBlock table.arrayElements tbody tr:nth-child(even) {
+  background-color: #fcfcfc;
+}
+#jsonParseError {
+  width: auto;
+  margin: 0 auto;
+  font-family: Verdana;
+  font-size: 14px;
+  text-align: center;
+}
+#jsonParseError p:first-child {
+  color: #7b0404;
+  font-weight: bold;
+  margin-top: 30px;
+}
+#jsonParseError p:last-child {
+  color: #666;
+  font-style: italic;
+}
+/*# sourceMappingURL=viewJSON.css.map */

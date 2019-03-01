@@ -1,0 +1,30 @@
+{
+  "root": "",
+  "formatCamelCase": true,
+  "formatDate": false,
+  "nullAppearence": "-",
+  "boolAppearence": ["No", "Yes"],
+  "hidePropertiesByValue": [
+    null,
+    0,
+    ""
+  ],
+  "hidePropertiesByKey": [
+    "OverdraftLimit",
+    "Description",
+    "Id"
+  ],
+  "dateAppearence": {
+    "keys": [
+      "Date"
+    ]
+  },
+  "hideArrayElements": false,
+  "showSearchPanel" : true,
+  "arraysAsTable": [
+    "Transactions"
+  ],
+  "keysForArrays": {
+    "Accounts": "Title"
+  }
+}
