@@ -1,19 +1,19 @@
 'use strict';
 
 class ViewJSON {
-    constructor (el = document.body, json = '') {
+    constructor (el = document.body, json = '', settings = '') {
         this.el = el;
         this.mainId = 'viewJsonMainBlock';
 
         try {
             this.json = JSON.parse(json); // TODO: SyntaxError
+            this.settings = JSON.parse(settings);
 
             this.search = new Search(this);
             this.form = new FormAction(this);
 
             this.state = 0; // 0 - json, 1 - search results
-            this.settings = {};
-            this.root = this.json;
+            this.root = this.settings.root || this.json;
 
         } catch (e) {
             this.errorMessage = e.message;
@@ -38,26 +38,6 @@ class ViewJSON {
 
             parentElement.className = classList.join(' ');
 
-        }
-    }
-
-    getSettings (generate) {
-        let self = this,
-            xhr = new XMLHttpRequest();
-
-        xhr.open('GET', 'data/settings.json', true);
-        xhr.send();
-
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState != 4) return;
-
-            if (xhr.status != 200) {
-                console.error(xhr.status + ': ' + xhr.statusText);
-            } else {
-                self.settings = JSON.parse(xhr.responseText);
-
-                generate();
-            }
         }
     }
 
@@ -274,6 +254,21 @@ class ViewJSON {
     }
 
     render () {
+        if (this.settings.root) {
+            let rootKeys = this.settings.root.split('/');
+            for (let i = 0; i < rootKeys.length; i++) {
+                this.root = this.root[rootKeys[i]];
+            }
+        }
+
+        this.generateJSON();
+        this.generate();
+
+        this.el.appendChild(this.mainElement);
+        this.addEvents();
+    }
+
+    start () {
         let self = this;
 
         if(!this.json) {
@@ -285,19 +280,7 @@ class ViewJSON {
         this.mainElement = document.createElement('div');
         this.mainElement.id = this.mainId;
 
-        this.getSettings(function(){
-            if(self.settings.root) {
-                let rootKeys = self.settings.root.split('/');
-                for(let i = 0; i < rootKeys.length; i++) {
-                    self.root = self.root[rootKeys[i]];
-                }
-            }
-
-            self.generateJSON();
-            self.generate();
-            self.el.appendChild(self.mainElement);
-            self.addEvents();
-        })
+        this.render();
     }
 
     addEvents () {
@@ -314,7 +297,6 @@ class ViewJSON {
 
     clear () {
         this.el.innerHTML = "";
-        this.search.clearEvents();
         this.clearEvents();
         delete this.mainElement;
         delete this.search.searchResultsMainElement;

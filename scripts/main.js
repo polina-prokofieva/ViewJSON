@@ -4,7 +4,37 @@ document.addEventListener('DOMContentLoaded', function(){
     let json = '',
         vJSON,
         element = document.getElementById('json'),
-        xhr = new XMLHttpRequest();
+        xhr = new XMLHttpRequest(),
+        settings = {
+            root: "",
+            formatCamelCase: true,
+            formatDate: false,
+            nullAppearence: "-",
+            boolAppearence: ["No", "Yes"],
+            hidePropertiesByValue: [
+                null,
+                0,
+                ""
+            ],
+            hidePropertiesByKey: [
+                "OverdraftLimit",
+                "Description",
+                "Id"
+            ],
+            dateAppearence: {
+                keys: [
+                    "Date"
+                ]
+            },
+            hideArrayElements: false,
+            showSearchPanel : true,
+            arraysAsTable: [
+                "Transactions"
+            ],
+            keysForArrays: {
+                Accounts: "Title"
+            }
+        };
 
     xhr.open('GET', 'data/data01.json', true);
     xhr.send();
@@ -16,8 +46,8 @@ document.addEventListener('DOMContentLoaded', function(){
             console.error( xhr.status + ': ' + xhr.statusText );
         } else {
             json = xhr.responseText;
-            vJSON = new ViewJSON(element, json);
-            vJSON.render();
+            vJSON = new ViewJSON(element, json, settings);
+            vJSON.start();
         }
     }
 });
