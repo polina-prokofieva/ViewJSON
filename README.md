@@ -55,7 +55,6 @@ vJSON.start();
       "Date"
     ]
   },
-  "hideArrayElements": false,
   "showSearchPanel" : true,
   "arraysAsTable": [
     "Transactions"
@@ -80,12 +79,10 @@ vJSON.start();
 
 **hidePropertiesByKey** — array of keys by which will be hided parameters of your json.
 
-**dateAppearence** — _...description will be soon..._
-
-**hideArrayElements** — _...description will be soon..._
+**dateAppearence** — key which will be detected as date.
 
 **showSearchPanel** — show or not search panel.
 
 **arraysAsTable** — array of keys of parameters which contain an array and which will be presented as a table.
 
-**keysForArrays** — _...description will be soon..._
+**keysForArrays** — an abject where keys are names of arrays and values are properties which will be shown as keys for corresponding arrays.
