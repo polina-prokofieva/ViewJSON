@@ -6,7 +6,7 @@ class ViewJSON {
         this.mainId = 'viewJsonMainBlock';
 
         try {
-            this.json = JSON.parse(json); // TODO: SyntaxError
+            this.json = JSON.parse(json.replace(/\s/g, ''));
             this.settings = JSON.parse(settings);
 
             this.search = new Search(this);
@@ -37,7 +37,6 @@ class ViewJSON {
             }
 
             parentElement.className = classList.join(' ');
-
         }
     }
 
@@ -77,7 +76,8 @@ class ViewJSON {
                 this.settings.hidePropertiesByValue.indexOf(json) === -1) {
 
                 if(this.settings.formatCamelCase) {
-                    key = i.match(/((^[a-z])|[A-Z])[a-z]*/g).join(' ');
+                    let words = i.match(/((^[a-z])|[A-Z])[a-z]*/g);
+                    key = words ? words.join(' ') : key;
                 }
 
                 html += `<li>${this.jsonToHTML(json[i], key)}</li>`;
@@ -96,7 +96,25 @@ class ViewJSON {
         if(this.settings.keysForArrays[key]) {
             html += elements
                 .map((a, i) => {
-                    return `<li class="element">${this.jsonToHTML(a, a[this.settings.keysForArrays[key]])}</li>`;
+                    let keyForCurrentElement;
+
+                    keyForCurrentElement = this.settings.keysForArrays[key].replace(/\{(\w|\.)+\}/g, function(str){
+                        let seq = str.slice(1, -1).split('.'),
+                            k = a[seq[0]];
+
+                        for(let j = 1; j < seq.length; j++) {
+                            if(k[seq[j]]) {
+                                k = k[seq[j]];
+                            } else {
+                                k = '-';
+                                break;
+                            }
+                        }
+
+                        return k || "-";
+                    });
+
+                    return `<li class="element">${this.jsonToHTML(a, keyForCurrentElement)}</li>`;
 
                 })
                 .join('');
@@ -292,13 +310,18 @@ class ViewJSON {
     clearEvents () {
         let self = this;
 
-        self.mainElement.removeEventListener('click', self.clickEventListener);
+        if(self.mainElement) {
+            self.mainElement.removeEventListener('click', self.clickEventListener);
+        }
     }
 
     clear () {
         this.el.innerHTML = "";
         this.clearEvents();
         delete this.mainElement;
-        delete this.search.searchResultsMainElement;
+
+        if(this.search) {
+            delete this.search.searchResultsMainElement;
+        }
     }
 }
