@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function(){
         if(typeof vJSON === "object") {
             vJSON.clear();
         }
+
         vJSON = new ViewJSON(element, json, settings);
         vJSON.start();
     });
