@@ -7,7 +7,7 @@ class ViewJSON {
 
         try {
             this.json = JSON.parse(json.replace(/\s/g, ''));
-            this.settings = JSON.parse(settings);
+            this.settings = JSON.parse(settings.replace(/\/\/.*\n/g, ''));
 
             this.search = new Search(this);
             this.form = new FormAction(this);
@@ -17,6 +17,7 @@ class ViewJSON {
 
         } catch (e) {
             this.errorMessage = e.message;
+            console.error(e);
         }
     }
 
