@@ -74,10 +74,10 @@ class ViewJSON {
             let key  = i;
 
             if (this.settings.hidePropertiesByKey.indexOf(key) === -1 &&
-                this.settings.hidePropertiesByValue.indexOf(json) === -1) {
+                this.settings.hidePropertiesByValue.indexOf(json[key]) === -1) {
 
                 if(this.settings.formatCamelCase) {
-                    let words = i.match(/((^[a-z])|[A-Z])[a-z]*/g);
+                    let words = key.match(/((^[a-z])|[A-Z])[a-z]*/g);
                     key = words ? words.join(' ') : key;
                 }
 
@@ -288,12 +288,15 @@ class ViewJSON {
     }
 
     start () {
-        let self = this;
-
         if(!this.json) {
             this.el.innerHTML = `<div id="jsonParseError"><p>There is an error in json file</p><p>Error message: ${this.errorMessage}</p></div>`;
             return;
         }
+
+      if(!this.settings) {
+        this.el.innerHTML = `<div id="jsonParseError"><p>There is an error in settings json</p><p>Error message: ${this.errorMessage}</p></div>`;
+        return;
+      }
 
         this.el.innerHTML = '';
         this.mainElement = document.createElement('div');
