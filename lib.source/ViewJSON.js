@@ -77,7 +77,7 @@ class ViewJSON {
                 this.settings.hidePropertiesByValue.indexOf(json[key]) === -1) {
 
                 if(this.settings.formatCamelCase) {
-                    let words = key.match(/((^[a-z])|[A-Z])[a-z]*/g);
+                    let words = key.match(/((^[a-z])|[A-Z])[a-z]+/g);
                     key = words ? words.join(' ') : key;
                 }
 
