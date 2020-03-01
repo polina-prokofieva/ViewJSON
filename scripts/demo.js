@@ -1,6 +1,7 @@
 'use strict';
 
 document.addEventListener('DOMContentLoaded', function(){
+  document.cookie = "SameSite=None";
     let json = '',
         vJSON,
         element = document.getElementById('json'),
