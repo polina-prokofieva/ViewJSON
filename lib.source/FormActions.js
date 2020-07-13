@@ -1,89 +1,87 @@
-'use strict';
+export default class FormAction {
+  constructor(viewJSON) {
+    this.id = "viewJSONActions";
+    this.opened = true;
+    this.viewJSON = viewJSON;
+  }
 
-class FormAction {
-    constructor (viewJSON) {
-        this.id = "viewJSONActions";
-        this.opened = true;
-        this.viewJSON = viewJSON;
+  createHideAllButton() {
+    if (!this.hideAllButton) {
+      this.hideAllButton = document.createElement("input");
+      this.hideAllButton.id = "hideAll";
+      this.hideAllButton.type = "button";
+      this.hideAllButton.value = "Hide All";
+    }
+  }
+
+  createSearchForm() {
+    if (!this.searchInput) {
+      this.searchInput = document.createElement("input");
+      this.searchInput.name = "search";
+
+      this.searchButton = document.createElement("input");
+      this.searchButton.type = "submit";
+      this.searchButton.id = "search";
+      this.searchButton.value = "Search";
+
+      this.resetButton = document.createElement("input");
+      this.resetButton.type = "button";
+      this.resetButton.id = "reset";
+      this.resetButton.value = "Reset";
+    }
+  }
+
+  addEvents() {
+    let self = this;
+
+    if (!self.hideAllAction) {
+      self.hideAllAction = function (e) {
+        e.preventDefault();
+        self.viewJSON.hideAll();
+      };
     }
 
-    createHideAllButton () {
-        if(!this.hideAllButton) {
-            this.hideAllButton = document.createElement("input");
-            this.hideAllButton.id = 'hideAll';
-            this.hideAllButton.type = 'button';
-            this.hideAllButton.value = 'Hide All';
-        }
+    if (!self.searchAction) {
+      self.searchAction = function (e) {
+        e.preventDefault();
+        self.viewJSON.search.reset();
+        self.viewJSON.search.searchByKeyAndValue(e);
+      };
     }
 
-    createSearchForm () {
-        if(!this.searchInput) {
-            this.searchInput = document.createElement("input");
-             this.searchInput.name = 'search';
-
-            this.searchButton = document.createElement("input");
-            this.searchButton.type = 'submit';
-            this.searchButton.id = "search";
-            this.searchButton.value = "Search";
-
-            this.resetButton = document.createElement("input");
-            this.resetButton.type = "button";
-            this.resetButton.id = "reset";
-            this.resetButton.value = "Reset";
-        }
+    if (!self.resetAction) {
+      self.resetAction = function (e) {
+        self.viewJSON.search.reset();
+        self.viewJSON.generate();
+      };
     }
 
-    addEvents () {
-         let self = this;
+    this.hideAllButton.addEventListener("click", this.hideAllAction);
+    this.resetButton.addEventListener("click", this.resetAction);
+    this.actionsElement.addEventListener("submit", this.searchAction);
+  }
 
-         if(!self.hideAllAction) {
-             self.hideAllAction = function (e) {
-                 e.preventDefault();
-                 self.viewJSON.hideAll();
-             };
-         }
+  clearEvents() {
+    this.hideAllButton.removeEventListener("click", this.hideAllAction);
+    this.resetButton.removeEventListener("click", this.resetAction);
+    this.actionsElement.removeEventListener("submit", this.searchAction);
+  }
 
-         if(!self.searchAction) {
-             self.searchAction = function (e) {
-                 e.preventDefault();
-                 self.viewJSON.search.reset();
-                 self.viewJSON.search.searchByKeyAndValue(e);
-             };
-         }
+  generate() {
+    if (!this.actionsElement) {
+      this.actionsElement = document.createElement("form");
+      this.actionsElement.id = this.id;
 
-         if(!self.resetAction) {
-             self.resetAction = function (e) {
-                 self.viewJSON.search.reset();
-                 self.viewJSON.generate();
-             };
-         }
+      this.createHideAllButton();
+      this.createSearchForm();
 
-        this.hideAllButton.addEventListener('click', this.hideAllAction);
-        this.resetButton.addEventListener('click', this.resetAction);
-        this.actionsElement.addEventListener('submit', this.searchAction);
+      this.actionsElement.appendChild(this.hideAllButton);
+
+      this.actionsElement.appendChild(this.resetButton);
+      this.actionsElement.appendChild(this.searchButton);
+      this.actionsElement.appendChild(this.searchInput);
     }
 
-    clearEvents () {
-        this.hideAllButton.removeEventListener('click', this.hideAllAction);
-        this.resetButton.removeEventListener('click', this.resetAction);
-        this.actionsElement.removeEventListener('submit', this.searchAction);
-    }
-
-    generate () {
-        if(!this.actionsElement) {
-            this.actionsElement = document.createElement("form");
-            this.actionsElement.id = this.id;
-
-            this.createHideAllButton();
-            this.createSearchForm();
-
-            this.actionsElement.appendChild(this.hideAllButton);
-
-            this.actionsElement.appendChild(this.resetButton);
-            this.actionsElement.appendChild(this.searchButton);
-            this.actionsElement.appendChild(this.searchInput);
-        }
-
-        return this.actionsElement;
-    }
+    return this.actionsElement;
+  }
 }

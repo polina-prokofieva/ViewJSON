@@ -1,30 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Main ViewJSON page</title>
-    <link rel="stylesheet" href="styles/demo.css">
-    <link rel="stylesheet" href="lib.min/viewJSON.min.css">
+    <link rel="stylesheet" href="styles/demo.css" />
+    <link rel="stylesheet" href="lib.min/viewJSON.min.css" />
     <!--<link rel="stylesheet" href="styles/lib/viewJSON.css">-->
 
-    <!--<script src="lib.source/Search.js"></script>-->
-    <!--<script src="lib.source/FormActions.js"></script>-->
-    <!--<script src="lib.source/ViewJSON.js"></script>-->
-    <script src="lib.min/ViewJSON.min.js"></script>
+    <!-- <script src="lib.source/ViewJSON.js"></script> -->
+    <!-- <script src="lib.min/ViewJSON.min.js"></script> -->
+    <script src="dist/viewjson.js"></script>
     <script src="scripts/demo.js"></script>
-
-</head>
-<body>
+  </head>
+  <body>
     <div id="json">
-        <p>Insert json-text to the field on the right and you will see the object here.</p>
+      <p>
+        Insert json-text to the field on the right and you will see the object
+        here.
+      </p>
     </div>
     <form id="demo">
-        <p>Please, insert json for parse here:</p>
-        <textarea rows="5" cols="45" name="text">
-        </textarea><br />
+      <p>Please, insert json for parse here:</p>
+      <textarea rows="5" cols="45" name="text"> </textarea><br />
 
-        <p>Settings (json):</p>
-        <textarea rows="5" cols="45" name="text">
+      <p>Settings (json):</p>
+      <textarea rows="5" cols="45" name="text">
 {
   "root": "", //root of json which should be presented. If it is "" the whole json will be presented.
 
@@ -62,8 +62,9 @@
     "accounts": "{meta.name} {type} {meta.limit}"
   }
 }
-        </textarea><br />
-        <p><input type="submit" value="Generate"></p>
+        </textarea
+      ><br />
+      <p><input type="submit" value="Generate" /></p>
     </form>
-</body>
+  </body>
 </html>
