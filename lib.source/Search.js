@@ -16,10 +16,10 @@ class Search {
             let searchResultsHeader = e.target,
                 searchResults = searchResultsHeader.nextElementSibling,
                 classList = searchResults.className.split(' '),
-                visibility = classList.indexOf('visible');
+                visibility = classList.indexOf('jv-visible');
 
             if(visibility === -1) {
-                classList[classList.length] = 'visible';
+                classList[classList.length] = 'jv-visible';
                 searchResultsHeader.className += ' open';
             } else {
                 classList.splice(visibility, 1);
@@ -106,7 +106,7 @@ class Search {
             this[`searchResults_${type}`] = document.createElement('div');
         }
 
-        this[`searchResults_${type}`].className = `searchResults visible`;
+        this[`searchResults_${type}`].className = `searchResults jv-visible`;
 
         if(results.length >= 1) {
             for(let i = 0; i < results.length; i++) {

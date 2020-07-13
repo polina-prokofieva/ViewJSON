@@ -25,16 +25,16 @@ class ViewJSON {
         if(/key/.test(e.target.className)) {
             let parentElement = e.target.parentNode,
                 classList = parentElement.className.split(' '),
-                visibility = classList.indexOf('invisible');
+                visibility = classList.indexOf('jv-invisible');
 
             if(visibility === -1) {
-                visibility = classList.indexOf('visible');
+                visibility = classList.indexOf('jv-visible');
                 if(visibility === -1) {
                     visibility = classList.length;
                 }
-                classList[visibility] = 'invisible';
+                classList[visibility] = 'jv-invisible';
             } else {
-                classList[visibility] = 'visible';
+                classList[visibility] = 'jv-visible';
             }
 
             parentElement.className = classList.join(' ');
@@ -215,14 +215,14 @@ class ViewJSON {
 
     hideObjectOrArray (parentElement) {
         let classList = parentElement.className.split(' '),
-            visibility = classList.indexOf('invisible');
+            visibility = classList.indexOf('jv-invisible');
 
         if(visibility === -1) {
-            visibility = classList.indexOf('visible');
+            visibility = classList.indexOf('jv-visible');
             if(visibility === -1) {
                 visibility = classList.length;
             }
-            classList[visibility] = 'invisible';
+            classList[visibility] = 'jv-invisible';
         }
 
         parentElement.className = classList.join(' ');
