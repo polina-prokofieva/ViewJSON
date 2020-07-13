@@ -15,7 +15,7 @@ vJSON = new ViewJSON.default(element, json, settings);
 vJSON.start();
 ```
 
-Of if you'll use source JS code from lib.sourse/ViewJSON.js:
+Or if you'll use source JS code from lib.sourse/ViewJSON.js:
 
 ```
 vJSON = new ViewJSON(element, json, settings);
