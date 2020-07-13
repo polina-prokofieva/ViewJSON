@@ -4,11 +4,18 @@
 
 **ViewJSON** is a class for convenient presentation of a json.
 
-## Demo
+## Published
 
-http://freeze.pp.ua/polina.work/
+https://polina-prokofieva.github.io/ViewJSON/
 
 ## Syntax
+
+```
+vJSON = new ViewJSON.default(element, json, settings);
+vJSON.start();
+```
+
+Of if you'll use source JS code from lib.sourse/ViewJSON.js:
 
 ```
 vJSON = new ViewJSON(element, json, settings);
