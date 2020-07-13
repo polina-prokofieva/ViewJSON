@@ -1,7 +1,7 @@
 import Search from "./Search";
 import FormAction from "./FormActions";
 
-export default class {
+export default class ViewJSON {
   constructor(el = document.body, json = "", settings = "") {
     this.el = el;
     this.mainId = "viewJsonMainBlock";
