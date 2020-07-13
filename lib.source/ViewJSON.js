@@ -23,7 +23,7 @@ export default class ViewJSON {
 
   clickEventListener(e) {
     if (/key/.test(e.target.className)) {
-      let parentElement = e.target.parentNode,
+      const parentElement = e.target.parentNode,
         classList = parentElement.className.split(" "),
         visibility = classList.indexOf("jv-invisible");
 
@@ -111,7 +111,7 @@ export default class ViewJSON {
                 k = a[seq[0]];
 
               for (let j = 1; j < seq.length; j++) {
-                if (k[seq[j]]) {
+                if (k && k[seq[j]]) {
                   k = k[seq[j]];
                 } else {
                   k = "-";
@@ -227,8 +227,8 @@ export default class ViewJSON {
   }
 
   hideObjectOrArray(parentElement) {
-    let classList = parentElement.className.split(" "),
-      visibility = classList.indexOf("jv-invisible");
+    const classList = parentElement.className.split(" ");
+    let visibility = classList.indexOf("jv-invisible");
 
     if (visibility === -1) {
       visibility = classList.indexOf("jv-visible");
@@ -242,12 +242,9 @@ export default class ViewJSON {
   }
 
   hideAllJson(mainElement = this.mainElement) {
-    let allObjectElements,
-      allArrayElements,
-      mainNode = mainElement.children[0];
-
-    allObjectElements = mainNode.getElementsByClassName("object");
-    allArrayElements = mainNode.getElementsByClassName("array");
+    const mainNode = mainElement.children[0];
+    const allObjectElements = mainNode.getElementsByClassName("object");
+    const allArrayElements = mainNode.getElementsByClassName("array");
 
     for (let i = 0; i < allObjectElements.length; i++) {
       this.hideObjectOrArray(allObjectElements[i]);
