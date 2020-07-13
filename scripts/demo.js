@@ -1,10 +1,3 @@
-// import ViewJSON from "../lib.source/ViewJSON";
-// import { ViewJSON } from "../dist/viewjson";
-
-// const { default: ViewJSON } = require("../lib.source/ViewJSON");
-
-console.log(ViewJSON.default);
-
 document.addEventListener("DOMContentLoaded", function () {
   document.cookie = "SameSite=None";
   let json = "",
