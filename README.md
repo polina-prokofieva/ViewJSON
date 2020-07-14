@@ -8,6 +8,10 @@
 
 https://polina-prokofieva.github.io/ViewJSON/
 
+## Setup
+
+Get files from **dist** directory and add it to your project.
+
 ## Syntax
 
 ```
