@@ -23,9 +23,9 @@ export default class ViewJSON {
 
   clickEventListener(e) {
     if (/key/.test(e.target.className)) {
-      const parentElement = e.target.parentNode,
-        classList = parentElement.className.split(" "),
-        visibility = classList.indexOf("jv-invisible");
+      let parentElement = e.target.parentNode;
+      let classList = parentElement.className.split(" ");
+      let visibility = classList.indexOf("jv-invisible");
 
       if (visibility === -1) {
         visibility = classList.indexOf("jv-visible");
