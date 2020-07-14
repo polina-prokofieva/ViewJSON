@@ -199,11 +199,21 @@
   font-weight: bold;
 }
 #viewJsonMainBlock .array .arrayElements .element > .object > .key::before,
-#searchResultsMainBlock .array .arrayElements .element > .object > .key::before {
+#searchResultsMainBlock
+  .array
+  .arrayElements
+  .element
+  > .object
+  > .key::before {
   margin: 5px 5px 0 0;
 }
 #viewJsonMainBlock .array .arrayElements .element > .object > .objectProperties,
-#searchResultsMainBlock .array .arrayElements .element > .object > .objectProperties {
+#searchResultsMainBlock
+  .array
+  .arrayElements
+  .element
+  > .object
+  > .objectProperties {
   padding: 1px 20px 5px 30px;
 }
 #viewJsonMainBlock .array .arrayElements .element.hidden,
