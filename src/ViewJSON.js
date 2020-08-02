@@ -303,6 +303,10 @@ export default class ViewJSON {
   }
 
   start() {
+    if (!this.el) {
+      console.error("Incorrect HTML element passed to class");
+    }
+
     if (!this.json) {
       this.el.innerHTML = `<div id="jsonParseError"><p>There is an error in json file</p><p>Error message: ${this.errorMessage}</p></div>`;
       return;
