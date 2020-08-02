@@ -304,7 +304,8 @@ export default class ViewJSON {
 
   start() {
     if (!this.el) {
-      console.error("Incorrect HTML element passed to class");
+      console.error("Incorrect HTML element passed to class ViewJSON");
+      return;
     }
 
     if (!this.json) {
