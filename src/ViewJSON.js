@@ -1,10 +1,13 @@
 import Search from "./Search";
 import FormAction from "./FormActions";
+import Render from "./Render";
 
 export default class ViewJSON {
   constructor(el = document.body, json = "", settings = "") {
     this.el = el;
     this.mainId = "viewJsonMainBlock";
+
+    console.log(Render);
 
     try {
       this.json = JSON.parse(json.replace(/\s/g, ""));
@@ -39,33 +42,6 @@ export default class ViewJSON {
 
       parentElement.className = classList.join(" ");
     }
-  }
-
-  numberToHTML(json) {
-    return `<span class="number">${json}</span>`;
-  }
-
-  stringToHTML(json) {
-    return `<span class="string"><span class="quot">"</span>${json}<span class="quot">"</span></span>`;
-  }
-
-  dateToHTML(json) {
-    let dt = new Date(json);
-    return `<span class="boolean">${dt.toDateString()}</span>`;
-  }
-
-  booleanToHTML(json) {
-    return `<span class="boolean">${
-      this.settings.boolAppearence[+json]
-    }</span>`;
-  }
-
-  nullToHTML() {
-    return `<span class="null">${settings.nullAppearence}</span>`;
-  }
-
-  undefinedToHTML(json) {
-    return `<span class="undefined">${json}</span>`;
   }
 
   objectToHTML(json) {
@@ -218,8 +194,15 @@ export default class ViewJSON {
       } else {
         html += this.arrayToHTML(json, key);
       }
+    } else if (type === "object") {
+      html += this.objectToHTML(json);
+    } else if (type === "boolean") {
+      html += Render.booleanValue(json, this.settings.boolAppearence);
     } else {
-      html += this[`${type}ToHTML`](json);
+      console.log(Render);
+      console.log(`${type}Value`);
+      console.log(Render[`${type}Value`]);
+      html += Render[`${type}Value`](json);
     }
     html += "</div>";
 
