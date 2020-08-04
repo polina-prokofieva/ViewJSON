@@ -1,3 +1,5 @@
+import renderJson from "./Elements";
+
 export default class Search {
   constructor(viewJson) {
     this.searchResults = {
@@ -33,18 +35,19 @@ export default class Search {
 
   searchByKeyAndValue(ev) {
     ev.preventDefault();
+    const { json, addEvents } = this.viewJson;
     let key = document.getElementsByName("search")[0].value.toLowerCase();
 
-    if (this.viewJson.json && typeof this.viewJson.json === "object") {
-      if (Array.isArray(this.viewJson.json)) {
-        this.searchInArray(key, this.viewJson.json);
+    if (json && typeof json === "object") {
+      if (Array.isArray(json)) {
+        this.searchInArray(key, json);
       } else {
-        this.searchInObject(key, this.viewJson.json);
+        this.searchInObject(key, json);
       }
     }
 
     this.renderSearchResults();
-    this.viewJson.addEvents();
+    addEvents();
   }
 
   searchInArray(key, arr) {
@@ -120,9 +123,10 @@ export default class Search {
 
     if (results.length >= 1) {
       for (let i = 0; i < results.length; i++) {
-        html += `<div class="${
-          this.resultClassName
-        }">${this.viewJson.jsonToHTML(results[i])}</div>`;
+        html += `<div class="${this.resultClassName}">${renderJson(
+          results[i],
+          this.viewJson.settings
+        )}</div>`;
       }
     } else {
       html += `<p> Nothing found </p>`;
@@ -132,6 +136,8 @@ export default class Search {
   }
 
   renderSearchResults() {
+    const { state, el, mainElement, clickEventListener } = this.viewJson;
+
     if (!this.searchHeader) {
       this.searchHeader = document.createElement("h3");
       this.searchHeader.innerHTML = "Search Results:";
@@ -156,16 +162,13 @@ export default class Search {
       );
       this.searchResultsMainElement.addEventListener(
         "click",
-        this.viewJson.clickEventListener
+        clickEventListener
       );
     }
 
-    if (this.viewJson.state === 0) {
-      this.viewJson.el.replaceChild(
-        this.searchResultsMainElement,
-        this.viewJson.mainElement
-      );
-      this.viewJson.state = 1;
+    if (state === 0) {
+      el.replaceChild(this.searchResultsMainElement, mainElement);
+      state = 1;
     }
 
     this.hideAllSearchResults();

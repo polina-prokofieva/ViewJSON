@@ -1,13 +1,11 @@
 import Search from "./Search";
 import FormAction from "./FormActions";
-import Render from "./Render";
+import renderJson from "./Elements";
 
 export default class ViewJSON {
   constructor(el = document.body, json = "", settings = "") {
     this.el = el;
     this.mainId = "viewJsonMainBlock";
-
-    console.log(Render);
 
     try {
       this.json = JSON.parse(json.replace(/\s/g, ""));
@@ -42,171 +40,6 @@ export default class ViewJSON {
 
       parentElement.className = classList.join(" ");
     }
-  }
-
-  objectToHTML(json) {
-    let html = "";
-    html += '<ul class="objectProperties">';
-
-    for (let i in json) {
-      let key = i;
-
-      if (
-        this.settings.hidePropertiesByKey.indexOf(key) === -1 &&
-        this.settings.hidePropertiesByValue.indexOf(json[key]) === -1
-      ) {
-        if (this.settings.formatCamelCase) {
-          let words = key.match(/((^[a-z])|[A-Z])[a-z]+/g);
-          key = words ? words.join(" ") : key;
-        }
-
-        html += `<li>${this.jsonToHTML(json[i], key)}</li>`;
-      }
-    }
-
-    return html;
-  }
-
-  arrayToHTML(json, key) {
-    let html = "",
-      elements = json.filter(
-        (value) => this.settings.hidePropertiesByValue.indexOf(value) === -1
-      );
-
-    html += '<ul class="arrayElements">';
-
-    if (this.settings.keysForArrays[key]) {
-      html += elements
-        .map((a, i) => {
-          let keyForCurrentElement;
-
-          keyForCurrentElement = this.settings.keysForArrays[key].replace(
-            /\{(\w|\.)+\}/g,
-            function (str) {
-              let seq = str.slice(1, -1).split("."),
-                k = a[seq[0]];
-
-              for (let j = 1; j < seq.length; j++) {
-                if (k && k[seq[j]]) {
-                  k = k[seq[j]];
-                } else {
-                  k = "-";
-                  break;
-                }
-              }
-
-              return k || "-";
-            }
-          );
-
-          return `<li class="element">${this.jsonToHTML(
-            a,
-            keyForCurrentElement
-          )}</li>`;
-        })
-        .join("");
-    } else {
-      html += elements
-        .map((a, i) => {
-          return `<li class="element">${this.jsonToHTML(a, i)}</li>`;
-        })
-        .join("");
-    }
-    html += "</ul>";
-
-    return html;
-  }
-
-  arrayToTableHTML(json) {
-    let html = "",
-      elements = json.filter(
-        (value) => this.settings.hidePropertiesByValue.indexOf(value) === -1
-      );
-
-    html += '<table class="arrayElements">';
-    html += "<thead><tr>";
-
-    for (let key in elements[0]) {
-      if (this.settings.hidePropertiesByKey.indexOf(key) === -1) {
-        html += `<th>${key}</th>`;
-      }
-    }
-
-    html += "</tr></thead>";
-    html += "<tbody>";
-
-    html += elements
-      .map((a, i) => {
-        let h = "<tr>";
-
-        for (let k in a) {
-          if (this.settings.hidePropertiesByKey.indexOf(k) === -1) {
-            h += "<td>";
-            if (a[k] && typeof a[k] === "object") {
-              h += "[Object]";
-            } else {
-              h += a[k] || this.settings.nullAppearence;
-            }
-
-            h += "</td>";
-          }
-        }
-
-        h += "</tr>";
-
-        return h;
-      })
-      .join("");
-
-    html += "</tbody>";
-    html += "</table>";
-
-    return html;
-  }
-
-  arrayToListHTML(json) {}
-
-  jsonToHTML(json = this.json, key) {
-    let type = typeof json,
-      html = "";
-
-    if (type === "object") {
-      if (Array.isArray(json)) {
-        type = "array";
-      } else if (json === null) {
-        type = "null";
-        if (this.settings.hidePropertiesByValue.indexOf(null) !== -1) {
-          return html;
-        }
-      }
-    } else if (this.settings.dateAppearence.keys.indexOf(key) !== -1) {
-      type = "date";
-    }
-
-    html += `<div class="${type}">`;
-    html +=
-      key !== undefined
-        ? `<span class="key">${key}</span><span class="colon">:</span> `
-        : "";
-    if (type === "array") {
-      if (this.settings.arraysAsTable.includes(key)) {
-        html += this.arrayToTableHTML(json);
-      } else {
-        html += this.arrayToHTML(json, key);
-      }
-    } else if (type === "object") {
-      html += this.objectToHTML(json);
-    } else if (type === "boolean") {
-      html += Render.booleanValue(json, this.settings.boolAppearence);
-    } else {
-      console.log(Render);
-      console.log(`${type}Value`);
-      console.log(Render[`${type}Value`]);
-      html += Render[`${type}Value`](json);
-    }
-    html += "</div>";
-
-    return html;
   }
 
   hideObjectOrArray(parentElement) {
@@ -248,8 +81,8 @@ export default class ViewJSON {
     }
   }
 
-  generateJSON(json = this.root) {
-    this.mainElement.innerHTML = this.jsonToHTML(json);
+  generateJSON() {
+    this.mainElement.innerHTML = renderJson(this.root, this.settings);
     this.state = 0;
   }
 

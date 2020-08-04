@@ -22,43 +22,43 @@
 
       <p>Settings (json):</p>
       <textarea rows="5" cols="45" name="text">
-{
-  "root": "", //root of json which should be presented. If it is "" the whole json will be presented.
-
-  "formatCamelCase": true, //if it is true all parameters in CamesCase will be formatted to separate words.
-
-  "formatDate": false, //format date values
-
-  "nullAppearence": "-", //string by which will be replaced null values.
-
-  "boolAppearence": ["No", "Yes"], //array of strings by which will be replased true and false values.
-
-  "hidePropertiesByValue": [ //array of values by which will be hided parameters of your json.
-    null,
-    0,
-    ""
-  ],
-
-  "hidePropertiesByKey": [ //array of keys by which will be hided parameters of your json.
-    "OverdraftLimit",
-    "Description",
-    "Id"
-  ],
-
-  "dateAppearence": { //key which will be detected as date.
-    "keys": [
-      "Date"
-    ]
-  },
-  "showSearchPanel" : true, //show or not search panel.
-            
-  "arraysAsTable": [ //array of keys of parameters which contain an array and which will be presented as a table.
-    "Transactions"
-  ],
-  "keysForArrays": { //an abject where keys are names of arrays and values are properties which will be shown as keys for corresponding arrays.
-    "accounts": "{meta.name} {type} {meta.limit}"
-  }
-}
+        {
+          "root": "", //root of json which should be presented. If it is "" the whole json will be presented.
+        
+          "formatCamelCase": true, //if it is true all parameters in CamesCase will be formatted to separate words.
+        
+          "formatDate": false, //format date values
+        
+          "nullAppearence": "-", //string by which will be replaced null values.
+        
+          "boolAppearence": ["No", "Yes"], //array of strings by which will be replased true and false values.
+        
+          "hidePropertiesByValue": [ //array of values by which will be hided parameters of your json.
+            null,
+            0,
+            ""
+          ],
+        
+          "hidePropertiesByKey": [ //array of keys by which will be hided parameters of your json.
+            "ExpandedDataReturned",
+            "DateReported",
+            "AssignedDate"
+          ],
+        
+          "dateAppearence": { //key which will be detected as date.
+            "keys": [
+              "Date"
+            ]
+          },
+          "showSearchPanel" : true, //show or not search panel.
+                    
+          "arraysAsTable": [ //array of keys of parameters which contain an array and which will be presented as a table.
+            "Collections"
+          ],
+          "keysForArrays": { //an abject where keys are names of arrays and values are properties which will be shown as keys for corresponding arrays.
+            "accounts": "{meta.name} {type} {meta.limit}"
+          }
+        }        
         </textarea
       ><br />
       <p><input type="submit" value="Generate" /></p>
