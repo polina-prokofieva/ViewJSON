@@ -3,6 +3,27 @@ export default class FormAction {
     this.id = "viewJSONActions";
     this.opened = true;
     this.viewJSON = viewJSON;
+    this.search = this.viewJSON.search;
+
+    this.hideAllAction = this.hideAllAction.bind(this);
+    this.searchAction = this.searchAction.bind(this);
+    this.resetAction = this.resetAction.bind(this);
+  }
+
+  hideAllAction(e) {
+    e.preventDefault();
+    this.viewJSON.hideAll();
+  }
+
+  searchAction(e) {
+    e.preventDefault();
+    this.search.reset();
+    this.search.searchByKeyAndValue(e);
+  }
+
+  resetAction(e) {
+    this.search.reset();
+    this.viewJSON.generate();
   }
 
   createHideAllButton() {
@@ -32,30 +53,6 @@ export default class FormAction {
   }
 
   addEvents() {
-    const self = this;
-
-    if (!self.hideAllAction) {
-      self.hideAllAction = function (e) {
-        e.preventDefault();
-        self.viewJSON.hideAll();
-      };
-    }
-
-    if (!self.searchAction) {
-      self.searchAction = function (e) {
-        e.preventDefault();
-        self.viewJSON.search.reset();
-        self.viewJSON.search.searchByKeyAndValue(e);
-      };
-    }
-
-    if (!self.resetAction) {
-      self.resetAction = function (e) {
-        self.viewJSON.search.reset();
-        self.viewJSON.generate();
-      };
-    }
-
     this.hideAllButton.addEventListener("click", this.hideAllAction);
     this.resetButton.addEventListener("click", this.resetAction);
     this.actionsElement.addEventListener("submit", this.searchAction);
