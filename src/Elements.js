@@ -1,3 +1,5 @@
+import Render from "./Render";
+
 const defineTypeOfValue = (
   json,
   { hidePropertiesByValue, dateAppearence },
@@ -45,46 +47,28 @@ const renderJson = (json, settings, key) => {
       html += renderObject(json, settings);
       break;
     case "boolean":
-      html += renderBooleanValue(json, settings);
+      html += Render.booleanValue(json, settings);
       break;
     case "null":
-      html += renderNullValue(settings);
+      html += Render.nullValue(settings);
       break;
     case "date":
-      html += renderDateValue(json);
+      html += Render.dateValue(json);
       break;
     case "undefined":
-      html += renderUndefinedValue();
+      html += Render.undefinedValue();
       break;
     case "number":
-      html += renderNumberValue(json);
+      html += Render.numberValue(json);
       break;
     case "string":
-      html += renderStringValue(json);
+      html += Render.stringValue(json);
       break;
   }
   html += "</div>";
 
   return html;
 };
-
-const renderNumberValue = (json) => `<span class="number">${json}</span>`;
-
-const renderStringValue = (json) =>
-  `<span class="string"><span class="quot">"</span>${json}<span class="quot">"</span></span>`;
-
-const renderDateValue = (json) => {
-  let dt = new Date(json);
-  return `<span class="boolean">${dt.toDateString()}</span>`;
-};
-
-const renderBooleanValue = (json, { boolAppearence }) =>
-  `<span class="boolean">${boolAppearence[+json]}</span>`;
-
-const renderNullValue = ({ nullAppearence }) =>
-  `<span class="null">${nullAppearence}</span>`;
-
-const renderUndefinedValue = () => `<span class="undefined">undefined</span>`;
 
 const renderTableHeader = (elements, hidePropertiesByKey) => {
   var html = "<thead><tr>";

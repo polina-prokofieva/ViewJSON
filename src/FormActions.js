@@ -1,3 +1,5 @@
+import Render from "./Render";
+
 export default class FormAction {
   constructor(viewJSON) {
     this.id = "viewJSONActions";
@@ -26,29 +28,11 @@ export default class FormAction {
     this.viewJSON.generate();
   }
 
-  createHideAllButton() {
-    if (!this.hideAllButton) {
-      this.hideAllButton = document.createElement("input");
-      this.hideAllButton.id = "hideAll";
-      this.hideAllButton.type = "button";
-      this.hideAllButton.value = "Hide All";
-    }
-  }
-
   createSearchForm() {
     if (!this.searchInput) {
-      this.searchInput = document.createElement("input");
-      this.searchInput.name = "search";
-
-      this.searchButton = document.createElement("input");
-      this.searchButton.type = "submit";
-      this.searchButton.id = "search";
-      this.searchButton.value = "Search";
-
-      this.resetButton = document.createElement("input");
-      this.resetButton.type = "button";
-      this.resetButton.id = "reset";
-      this.resetButton.value = "Reset";
+      this.searchInput = Render.searchInput();
+      this.searchButton = Render.searchButton();
+      this.resetButton = Render.resetButton();
     }
   }
 
@@ -69,7 +53,7 @@ export default class FormAction {
       this.actionsElement = document.createElement("form");
       this.actionsElement.id = this.id;
 
-      this.createHideAllButton();
+      this.hideAllButton = Render.hideAllButton();
       this.createSearchForm();
 
       this.actionsElement.appendChild(this.hideAllButton);
