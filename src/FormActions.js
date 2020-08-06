@@ -10,18 +10,18 @@ export default class FormAction {
     this.resetAction = this.resetAction.bind(this);
   }
 
-  hideAllAction(e) {
-    e.preventDefault();
+  hideAllAction(evt) {
+    evt.preventDefault();
     this.viewJSON.hideAll();
   }
 
-  searchAction(e) {
-    e.preventDefault();
+  searchAction(evt) {
+    evt.preventDefault();
     this.search.reset();
-    this.search.searchByKeyAndValue(e);
+    this.search.searchByKeyAndValue(evt);
   }
 
-  resetAction(e) {
+  resetAction(evt) {
     this.search.reset();
     this.viewJSON.generate();
   }

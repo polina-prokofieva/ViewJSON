@@ -29,9 +29,9 @@ export default class ViewJSON {
 
       this.state = 0; // 0 - json, 1 - search results
       this.root = this.settings.root || this.json;
-    } catch (e) {
-      this.errorMessage = e.message;
-      console.error(e);
+    } catch (err) {
+      this.errorMessage = err.message;
+      console.error(err);
     }
   }
 
@@ -39,9 +39,9 @@ export default class ViewJSON {
     this.state = newState;
   }
 
-  clickEventListener(e) {
-    if (/key/.test(e.target.className)) {
-      let parentElement = e.target.parentNode;
+  clickEventListener(evt) {
+    if (/key/.test(evt.target.className)) {
+      let parentElement = evt.target.parentNode;
       let classList = parentElement.className.split(" ");
       let visibility = classList.indexOf("jv-invisible");
 

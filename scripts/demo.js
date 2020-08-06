@@ -6,10 +6,10 @@ document.addEventListener("DOMContentLoaded", function () {
     form = document.getElementById("demo"),
     settings;
 
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    json = e.target[0].value;
-    settings = e.target[1].value;
+  form.addEventListener("submit", function (evt) {
+    evt.preventDefault();
+    json = evt.target[0].value;
+    settings = evt.target[1].value;
 
     if (typeof vJSON === "object") {
       vJSON.clear();

@@ -2,18 +2,18 @@ import renderJson from "./Elements";
 
 export default class Search {
   constructor(viewJson) {
+    this.viewJson = viewJson;
     this.searchResults = {
       byKey: [],
       byValue: [],
     };
     this.resultClassName = "searchResultItem";
-    this.viewJson = viewJson;
     this.searchResultsId = "searchResultsMainBlock";
   }
 
-  clickEventListener(e) {
-    if (/searchHeader/.test(e.target.className)) {
-      let searchResultsHeader = e.target,
+  clickEventListener(evt) {
+    if (/searchHeader/.test(evt.target.className)) {
+      let searchResultsHeader = evt.target,
         searchResults = searchResultsHeader.nextElementSibling,
         classList = searchResults.className.split(" "),
         visibility = classList.indexOf("jv-visible");
@@ -33,8 +33,8 @@ export default class Search {
     }
   }
 
-  searchByKeyAndValue(ev) {
-    ev.preventDefault();
+  searchByKeyAndValue(evt) {
+    evt.preventDefault();
     const { json, addEvents } = this.viewJson;
     let key = document.getElementsByName("search")[0].value.toLowerCase();
 
