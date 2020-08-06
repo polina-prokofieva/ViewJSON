@@ -136,7 +136,13 @@ export default class Search {
   }
 
   renderSearchResults() {
-    const { state, el, mainElement, clickEventListener } = this.viewJson;
+    const {
+      state,
+      el,
+      mainElement,
+      clickEventListener,
+      setState,
+    } = this.viewJson;
 
     if (!this.searchHeader) {
       this.searchHeader = document.createElement("h3");
@@ -168,7 +174,7 @@ export default class Search {
 
     if (state === 0) {
       el.replaceChild(this.searchResultsMainElement, mainElement);
-      state = 1;
+      setState(1);
     }
 
     this.hideAllSearchResults();

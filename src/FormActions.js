@@ -32,7 +32,7 @@ export default class FormAction {
   }
 
   addEvents() {
-    let self = this;
+    const self = this;
 
     if (!self.hideAllAction) {
       self.hideAllAction = function (e) {

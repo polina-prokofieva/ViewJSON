@@ -7,6 +7,19 @@ export default class ViewJSON {
     this.el = el;
     this.mainId = "viewJsonMainBlock";
 
+    this.setState = this.setState.bind(this);
+    this.clickEventListener = this.clickEventListener.bind(this);
+    this.hideObjectOrArray = this.hideObjectOrArray.bind(this);
+    this.hideAllJson = this.hideAllJson.bind(this);
+    this.hideAll = this.hideAll.bind(this);
+    this.generateJSON = this.generateJSON.bind(this);
+    this.generate = this.generate.bind(this);
+    this.render = this.render.bind(this);
+    this.start = this.start.bind(this);
+    this.addEvents = this.addEvents.bind(this);
+    this.clearEvents = this.clearEvents.bind(this);
+    this.clear = this.clear.bind(this);
+
     try {
       this.json = JSON.parse(json.replace(/\s/g, ""));
       this.settings = JSON.parse(settings.replace(/\/\/.*\n/g, ""));
@@ -20,6 +33,10 @@ export default class ViewJSON {
       this.errorMessage = e.message;
       console.error(e);
     }
+  }
+
+  setState(newState) {
+    this.state = newState;
   }
 
   clickEventListener(e) {
@@ -142,16 +159,12 @@ export default class ViewJSON {
   }
 
   addEvents() {
-    let self = this;
-
-    self.mainElement.addEventListener("click", self.clickEventListener);
+    this.mainElement.addEventListener("click", this.clickEventListener);
   }
 
   clearEvents() {
-    let self = this;
-
-    if (self.mainElement) {
-      self.mainElement.removeEventListener("click", self.clickEventListener);
+    if (this.mainElement) {
+      this.mainElement.removeEventListener("click", this.clickEventListener);
     }
   }
 
