@@ -76,15 +76,18 @@ export default class ViewJSON {
 
   hideAllJson(mainElement = this.mainElement) {
     const mainNode = mainElement.children[0];
-    const allObjectElements = mainNode.getElementsByClassName("object");
-    const allArrayElements = mainNode.getElementsByClassName("array");
 
-    for (let i = 0; i < allObjectElements.length; i++) {
-      this.hideObjectOrArray(allObjectElements[i]);
-    }
+    if (mainNode) {
+      const allObjectElements = mainNode.getElementsByClassName("object");
+      const allArrayElements = mainNode.getElementsByClassName("array");
 
-    for (let i = 0; i < allArrayElements.length; i++) {
-      this.hideObjectOrArray(allArrayElements[i]);
+      for (let i = 0; i < allObjectElements.length; i++) {
+        this.hideObjectOrArray(allObjectElements[i]);
+      }
+
+      for (let i = 0; i < allArrayElements.length; i++) {
+        this.hideObjectOrArray(allArrayElements[i]);
+      }
     }
   }
 

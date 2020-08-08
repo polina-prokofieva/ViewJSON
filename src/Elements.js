@@ -23,11 +23,18 @@ const defineTypeOfValue = (
   return type;
 };
 
+const isHidePropertyByKey = (key, { hidePropertiesByKey }) =>
+  hidePropertiesByKey.includes(key);
+
 const renderJson = (json, settings, key) => {
   const { arraysAsTable } = settings;
 
-  let type = defineTypeOfValue(json, settings, key);
   let html = "";
+  let type = defineTypeOfValue(json, settings, key);
+
+  if (isHidePropertyByKey(key, settings)) {
+    return html;
+  }
 
   html += `<div class="${type}">`;
   html +=
