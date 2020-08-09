@@ -1,20 +1,49 @@
-const numberValue = (json) => `<span class="number">${json}</span>`;
+const createSimpleDOMElement = (tag, value = "", options = {}) => {
+  const element = document.createElement(tag);
+  element.innerHTML = value;
 
-const stringValue = (json) =>
-  `<span class="string"><span class="quot">"</span>${json}<span class="quot">"</span></span>`;
+  for (let param in options) {
+    element[param] = options[param];
+  }
 
-const dateValue = (json) => {
-  let dt = new Date(json);
-  return `<span class="boolean">${dt.toDateString()}</span>`;
+  return element;
+};
+
+const quotElement = createSimpleDOMElement("span", '"', {
+  className: "quot",
+});
+
+const numberValue = (value) =>
+  createSimpleDOMElement("span", value, { className: "number" });
+
+const stringValue = (value) => {
+  const element = createSimpleDOMElement("span", value, {
+    className: "string",
+  });
+
+  element.insertAdjacentElement("afterBegin", quotElement.cloneNode(true));
+  element.insertAdjacentElement("beforeEnd", quotElement.cloneNode(true));
+
+  return element;
+};
+
+const dateValue = (value) => {
+  const dt = new Date(value);
+  return createSimpleDOMElement("span", dt.toDateString(), {
+    className: "date",
+  });
 };
 
 const booleanValue = (json, { boolAppearence }) =>
-  `<span class="boolean">${boolAppearence[+json]}</span>`;
+  createSimpleDOMElement("span", boolAppearence[+json], {
+    className: "boolean",
+  });
 
 const nullValue = ({ nullAppearence }) =>
-  `<span class="null">${nullAppearence}</span>`;
+  createSimpleDOMElement("span", nullAppearence, { className: "null" });
 
-const undefinedValue = () => `<span class="undefined">undefined</span>`;
+const undefinedValue = () =>
+  createSimpleDOMElement("span", "undefined", { className: "undefined" });
 
 const hideAllButton = () => {
   const element = document.createElement("input");
@@ -63,6 +92,7 @@ const Render = {
   searchInput,
   searchButton,
   resetButton,
+  createSimpleDOMElement,
 };
 
 export default Render;

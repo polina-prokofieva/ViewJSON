@@ -25,107 +25,130 @@ const isHidePropertyByValue = (value, { hidePropertiesByValue }) =>
 const renderJson = (value, settings, key) => {
   const { arraysAsTable } = settings;
 
-  let html = "";
-  let type = defineTypeOfValue(value, settings, key);
+  const itemElement = document.createElement("div");
+  let valueElement;
+
+  const type = defineTypeOfValue(value, settings, key);
 
   if (
     isHidePropertyByKey(key, settings) ||
     isHidePropertyByValue(value, settings)
   ) {
-    return html;
+    return null;
   }
 
-  html += `<div class="${type}">`;
-  html +=
-    key !== undefined
-      ? `<span class="key">${key}</span><span class="colon">:</span> `
-      : "";
+  itemElement.className = type;
+
+  if (key) {
+    const keyElement = Render.createSimpleDOMElement("span", key, {
+      className: "key",
+    });
+    const colonElement = Render.createSimpleDOMElement("span", ":&nbsp;", {
+      className: "colon",
+    });
+    itemElement.appendChild(keyElement);
+    itemElement.appendChild(colonElement);
+  }
 
   switch (type) {
     case "array":
       if (arraysAsTable.includes(key)) {
-        html += renderArrayToTable(value, settings);
+        valueElement = renderArrayToTable(value, settings);
       } else {
-        html += renderArray(value, settings, key);
+        valueElement = renderArray(value, settings, key);
       }
       break;
     case "object":
-      html += renderObject(value, settings);
+      valueElement = renderObject(value, settings);
       break;
     case "boolean":
-      html += Render.booleanValue(value, settings);
+      valueElement = Render.booleanValue(value, settings);
       break;
     case "null":
-      html += Render.nullValue(settings);
+      valueElement = Render.nullValue(settings);
       break;
     case "date":
-      html += Render.dateValue(value);
+      valueElement = Render.dateValue(value);
       break;
     case "undefined":
-      html += Render.undefinedValue();
+      valueElement = Render.undefinedValue();
       break;
     case "number":
-      html += Render.numberValue(value);
+      valueElement = Render.numberValue(value);
       break;
     case "string":
-      html += Render.stringValue(value);
+      valueElement = Render.stringValue(value);
       break;
   }
-  html += "</div>";
 
-  return html;
+  itemElement.appendChild(valueElement);
+
+  return itemElement;
 };
 
-const renderTableHeader = (elements, settings) => {
-  var html = "<thead><tr>";
+const renderTableHeader = (firstElement, settings) => {
+  const line = document.createElement("tr");
+  const head = document.createElement("thead");
 
-  for (let key in elements[0]) {
+  head.appendChild(line);
+
+  for (let key in firstElement) {
     if (!isHidePropertyByKey(key, settings)) {
-      html += `<th>${key}</th>`;
+      const cell = document.createElement("th");
+      cell.textContent = key;
+      line.appendChild(cell);
     }
   }
 
-  return `${html}</tr></thead>`;
+  return head;
 };
 
-const renderArrayToTable = (json, settings) => {
+const renderTableBody = (elements, settings) => {
   const { nullAppearence } = settings;
+  const body = document.createElement("tbody");
+
+  for (let i = 0; i < elements.length; i++) {
+    const row = document.createElement("tr");
+    const item = elements[i];
+
+    for (let key in elements[i]) {
+      if (!isHidePropertyByKey(key, settings)) {
+        const cell = document.createElement("td");
+        let value = "";
+
+        if (item[key] && typeof item[key] === "object") {
+          value = "[Object]";
+        } else {
+          value = item[key] || nullAppearence;
+        }
+
+        cell.textContent = value;
+        row.appendChild(cell);
+      }
+    }
+    body.appendChild(row);
+  }
+
+  return body;
+};
+
+const renderArrayToTable = (value, settings) => {
   let html = "";
-  const filteredItems = json.filter(
+  const filteredItems = value.filter(
     (item) => !isHidePropertyByValue(item, settings)
   );
 
-  html += '<table class="arrayElements">';
-  html += renderTableHeader(filteredItems, settings);
-  html += "<tbody>";
+  const tableHeader = renderTableHeader(filteredItems[0], settings);
+  const tableBody = renderTableBody(filteredItems, settings);
 
-  html += filteredItems
-    .map((item) => {
-      let h = "<tr>";
+  const tableElement = Render.createSimpleDOMElement("table", "", {
+    className: "arrayElements",
+  });
 
-      for (let key in item) {
-        if (!isHidePropertyByKey(key, settings)) {
-          h += "<td>";
-          if (item[key] && typeof item[key] === "object") {
-            h += "[Object]";
-          } else {
-            h += item[key] || nullAppearence;
-          }
+  tableElement.appendChild(tableHeader);
+  tableElement.appendChild(tableBody);
 
-          h += "</td>";
-        }
-      }
-
-      h += "</tr>";
-
-      return h;
-    })
-    .join("");
-
-  html += "</tbody>";
-  html += "</table>";
-
-  return html;
+  return tableElement;
 };
 
 const convertKeyByMask = (item, mask) =>
@@ -147,52 +170,58 @@ const convertKeyByMask = (item, mask) =>
 
 const renderArray = (value, settings, key) => {
   const { keysForArrays } = settings;
-  let html = "";
   const filteredItems = value.filter(
     (item) => !isHidePropertyByValue(item, settings)
   );
+  const listElement = document.createElement("ul");
+  listElement.className = "arrayElements";
 
-  html += '<ul class="arrayElements">';
+  for (let item in filteredItems) {
+    const itemElement = document.createElement("li");
+    const keyName = keysForArrays[key]
+      ? convertKeyByMask(item, keysForArrays[key])
+      : key;
+    const renderedValueElement = renderJson(item, settings, keyName);
 
-  if (keysForArrays[key]) {
-    html += filteredItems
-      .map((item) => {
-        const keyForCurrentElement = convertKeyByMask(item, keysForArrays[key]);
-
-        return `<li class="element">${renderJson(
-          item,
-          settings,
-          keyForCurrentElement
-        )}</li>`;
-      })
-      .join("");
-  } else {
-    html += filteredItems
-      .map((item, key) => {
-        return `<li class="element">${renderJson(item, settings, key)}</li>`;
-      })
-      .join("");
+    if (renderedValueElement) {
+      itemElement.className = "element";
+      itemElement.appendChild(renderedValueElement);
+      listElement.appendChild(itemElement);
+    }
   }
-  html += "</ul>";
 
-  return html;
+  return listElement;
+};
+
+const convertKey = (key, settings) => {
+  if (settings.formatCamelCase) {
+    const words = key.match(/((^[a-z])|[A-Z])[a-z]+/g);
+    return words ? words.join(" ") : key;
+  }
+
+  return key;
 };
 
 const renderObject = (value, settings) => {
-  let html = '<ul class="objectProperties">';
+  const listElement = document.createElement("ul");
+  const items = document.createDocumentFragment();
 
-  for (let i in value) {
-    let key = i;
+  listElement.className = "objectProperties";
 
-    if (settings.formatCamelCase) {
-      let words = key.match(/((^[a-z])|[A-Z])[a-z]+/g);
-      key = words ? words.join(" ") : key;
+  for (let key in value) {
+    const item = document.createElement("li");
+    const convertedKey = convertKey(key, settings);
+    const renderedValueElement = renderJson(value[key], settings, convertedKey);
+
+    if (renderedValueElement) {
+      item.appendChild(renderedValueElement);
+      items.appendChild(item);
     }
-
-    html += `<li>${renderJson(value[i], settings, key)}</li>`;
   }
 
-  return html;
+  listElement.appendChild(items);
+
+  return listElement;
 };
 
 export default renderJson;
