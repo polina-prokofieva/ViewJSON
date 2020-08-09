@@ -1,10 +1,6 @@
 import Render from "./Render";
 
-const defineTypeOfValue = (
-  value,
-  { hidePropertiesByValue, dateAppearence },
-  key
-) => {
+const defineTypeOfValue = (value, { dateAppearence }, key) => {
   let type = typeof value;
 
   if (type === "object") {
@@ -80,11 +76,11 @@ const renderJson = (value, settings, key) => {
   return html;
 };
 
-const renderTableHeader = (elements, hidePropertiesByKey) => {
+const renderTableHeader = (elements, settings) => {
   var html = "<thead><tr>";
 
   for (let key in elements[0]) {
-    if (hidePropertiesByKey.indexOf(key) === -1) {
+    if (!isHidePropertyByKey(key, settings)) {
       html += `<th>${key}</th>`;
     }
   }
@@ -92,30 +88,28 @@ const renderTableHeader = (elements, hidePropertiesByKey) => {
   return `${html}</tr></thead>`;
 };
 
-const renderArrayToTable = (
-  json,
-  { hidePropertiesByValue, hidePropertiesByKey, nullAppearence }
-) => {
-  let html = "",
-    elements = json.filter(
-      (value) => hidePropertiesByValue.indexOf(value) === -1
-    );
+const renderArrayToTable = (json, settings) => {
+  const { nullAppearence } = settings;
+  let html = "";
+  const filteredItems = json.filter(
+    (item) => !isHidePropertyByValue(item, settings)
+  );
 
   html += '<table class="arrayElements">';
-  html += renderTableHeader(elements, hidePropertiesByKey);
+  html += renderTableHeader(filteredItems, settings);
   html += "<tbody>";
 
-  html += elements
-    .map((a, i) => {
+  html += filteredItems
+    .map((item) => {
       let h = "<tr>";
 
-      for (let k in a) {
-        if (hidePropertiesByKey.indexOf(k) === -1) {
+      for (let key in item) {
+        if (!isHidePropertyByKey(key, settings)) {
           h += "<td>";
-          if (a[k] && typeof a[k] === "object") {
+          if (item[key] && typeof item[key] === "object") {
             h += "[Object]";
           } else {
-            h += a[k] || nullAppearence;
+            h += item[key] || nullAppearence;
           }
 
           h += "</td>";
@@ -174,8 +168,8 @@ const renderArray = (value, settings, key) => {
       .join("");
   } else {
     html += filteredItems
-      .map((item, i) => {
-        return `<li class="element">${renderJson(item, settings, i)}</li>`;
+      .map((item, key) => {
+        return `<li class="element">${renderJson(item, settings, key)}</li>`;
       })
       .join("");
   }
