@@ -134,18 +134,18 @@ const renderArrayToTable = (
   return html;
 };
 
-const renderArray = (json, settings, key) => {
-  const { hidePropertiesByValue, keysForArrays } = settings;
-  let html = "",
-    elements = json.filter(
-      (value) => hidePropertiesByValue.indexOf(value) === -1
-    );
+const renderArray = (value, settings, key) => {
+  const { keysForArrays } = settings;
+  let html = "";
+  const filteredItems = value.filter(
+    (item) => !isHidePropertyByValue(item, settings)
+  );
 
   html += '<ul class="arrayElements">';
 
   if (keysForArrays[key]) {
-    html += elements
-      .map((a, i) => {
+    html += filteredItems
+      .map((item, i) => {
         let keyForCurrentElement;
 
         keyForCurrentElement = keysForArrays[key].replace(
@@ -168,16 +168,16 @@ const renderArray = (json, settings, key) => {
         );
 
         return `<li class="element">${renderJson(
-          a,
+          item,
           settings,
           keyForCurrentElement
         )}</li>`;
       })
       .join("");
   } else {
-    html += elements
-      .map((a, i) => {
-        return `<li class="element">${renderJson(a, settings, i)}</li>`;
+    html += filteredItems
+      .map((item, i) => {
+        return `<li class="element">${renderJson(item, settings, i)}</li>`;
       })
       .join("");
   }
