@@ -134,6 +134,23 @@ const renderArrayToTable = (
   return html;
 };
 
+const convertKeyByMask = (item, mask) =>
+  mask.replace(/\{(\w|\.)+\}/g, function (part) {
+    const path = part.slice(1, -1).split(".");
+    let convertedKey = item[path[0]];
+
+    for (let i = 1; i < path.length; i++) {
+      if (convertedKey && convertedKey[path[i]]) {
+        convertedKey = convertedKey[path[i]];
+      } else {
+        convertedKey = "-";
+        break;
+      }
+    }
+
+    return convertedKey || "-";
+  });
+
 const renderArray = (value, settings, key) => {
   const { keysForArrays } = settings;
   let html = "";
@@ -145,27 +162,8 @@ const renderArray = (value, settings, key) => {
 
   if (keysForArrays[key]) {
     html += filteredItems
-      .map((item, i) => {
-        let keyForCurrentElement;
-
-        keyForCurrentElement = keysForArrays[key].replace(
-          /\{(\w|\.)+\}/g,
-          function (str) {
-            let seq = str.slice(1, -1).split("."),
-              k = a[seq[0]];
-
-            for (let j = 1; j < seq.length; j++) {
-              if (k && k[seq[j]]) {
-                k = k[seq[j]];
-              } else {
-                k = "-";
-                break;
-              }
-            }
-
-            return k || "-";
-          }
-        );
+      .map((item) => {
+        const keyForCurrentElement = convertKeyByMask(item, keysForArrays[key]);
 
         return `<li class="element">${renderJson(
           item,
