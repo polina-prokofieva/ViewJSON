@@ -195,7 +195,7 @@ const convertKeyByMask = (item, mask) =>
       }
     }
 
-    return convertedKey || "-";
+    return convertedKey || null;
   });
 
 const renderArray = (value, settings, key) => {
@@ -206,12 +206,16 @@ const renderArray = (value, settings, key) => {
   const listElement = document.createElement("ul");
   listElement.className = "arrayElements";
 
-  for (let item in filteredItems) {
+  for (let k in filteredItems) {
     const itemElement = document.createElement("li");
     const keyName = keysForArrays[key]
-      ? convertKeyByMask(item, keysForArrays[key])
-      : key;
-    const renderedValueElement = renderJson(item, settings, keyName);
+      ? convertKeyByMask(filteredItems[k], keysForArrays[key])
+      : k;
+    const renderedValueElement = renderJson(
+      filteredItems[k],
+      settings,
+      keyName
+    );
 
     if (renderedValueElement) {
       itemElement.className = "element";
