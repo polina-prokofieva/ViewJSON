@@ -93,11 +93,9 @@ const renderTableHeader = (firstElement, settings) => {
   head.appendChild(line);
 
   for (let key in firstElement) {
-    if (!isHidePropertyByKey(key, settings)) {
-      const cell = document.createElement("th");
-      cell.textContent = key;
-      line.appendChild(cell);
-    }
+    const cell = document.createElement("th");
+    cell.textContent = key;
+    line.appendChild(cell);
   }
 
   return head;
@@ -112,19 +110,17 @@ const renderTableBody = (elements, settings) => {
     const item = elements[i];
 
     for (let key in elements[i]) {
-      if (!isHidePropertyByKey(key, settings)) {
-        const cell = document.createElement("td");
-        let value = "";
+      const cell = document.createElement("td");
+      let value = "";
 
-        if (item[key] && typeof item[key] === "object") {
-          value = "[Object]";
-        } else {
-          value = item[key] || nullAppearence;
-        }
-
-        cell.textContent = value;
-        row.appendChild(cell);
+      if (item[key] && typeof item[key] === "object") {
+        value = "[Object]";
+      } else {
+        value = item[key] || nullAppearence;
       }
+
+      cell.textContent = value;
+      row.appendChild(cell);
     }
     body.appendChild(row);
   }
@@ -132,14 +128,39 @@ const renderTableBody = (elements, settings) => {
   return body;
 };
 
+const removeColumnsByAllValues = (rows, settings) => {
+  let cleanedRow = [...rows];
+  const firstRow = cleanedRow[0];
+  const keysToDelete = Object.keys(firstRow);
+
+  for (let i = 0; i < rows.length; i++) {
+    for (let key of keysToDelete) {
+      if (!isHidePropertyByKey(key, settings)) {
+        if (!isHidePropertyByValue(rows[i][key], settings)) {
+          keysToDelete.splice(keysToDelete.indexOf(key), 1);
+        }
+      }
+    }
+  }
+
+  for (let i = 0; i < rows.length; i++) {
+    for (let key of keysToDelete) {
+      delete rows[i][key];
+    }
+  }
+
+  return cleanedRow;
+};
+
 const renderArrayToTable = (value, settings) => {
-  let html = "";
   const filteredItems = value.filter(
     (item) => !isHidePropertyByValue(item, settings)
   );
 
-  const tableHeader = renderTableHeader(filteredItems[0], settings);
-  const tableBody = renderTableBody(filteredItems, settings);
+  const cleanedRows = removeColumnsByAllValues(filteredItems, settings);
+
+  const tableHeader = renderTableHeader(cleanedRows[0], settings);
+  const tableBody = renderTableBody(cleanedRows, settings);
 
   const tableElement = Render.createSimpleDOMElement("table", "", {
     className: "arrayElements",
@@ -149,6 +170,15 @@ const renderArrayToTable = (value, settings) => {
   tableElement.appendChild(tableBody);
 
   return tableElement;
+};
+
+const convertKey = (key, settings) => {
+  if (settings.formatCamelCase) {
+    const words = key.match(/((^[a-z])|[A-Z])[a-z]+/g);
+    return words ? words.join(" ") : key;
+  }
+
+  return key;
 };
 
 const convertKeyByMask = (item, mask) =>
@@ -191,15 +221,6 @@ const renderArray = (value, settings, key) => {
   }
 
   return listElement;
-};
-
-const convertKey = (key, settings) => {
-  if (settings.formatCamelCase) {
-    const words = key.match(/((^[a-z])|[A-Z])[a-z]+/g);
-    return words ? words.join(" ") : key;
-  }
-
-  return key;
 };
 
 const renderObject = (value, settings) => {
