@@ -1,22 +1,19 @@
 import Render from "./Render";
 
 const defineTypeOfValue = (
-  json,
+  value,
   { hidePropertiesByValue, dateAppearence },
   key
 ) => {
-  let type = typeof json;
+  let type = typeof value;
 
   if (type === "object") {
-    if (Array.isArray(json)) {
+    if (Array.isArray(value)) {
       type = "array";
-    } else if (json === null) {
+    } else if (value === null) {
       type = "null";
-      if (hidePropertiesByValue.indexOf(null) !== -1) {
-        return html;
-      }
     }
-  } else if (dateAppearence.keys.indexOf(key) !== -1) {
+  } else if (dateAppearence.keys.includes(key)) {
     type = "date";
   }
 
@@ -26,13 +23,19 @@ const defineTypeOfValue = (
 const isHidePropertyByKey = (key, { hidePropertiesByKey }) =>
   hidePropertiesByKey.includes(key);
 
-const renderJson = (json, settings, key) => {
+const isHidePropertyByValue = (value, { hidePropertiesByValue }) =>
+  hidePropertiesByValue.includes(value);
+
+const renderJson = (value, settings, key) => {
   const { arraysAsTable } = settings;
 
   let html = "";
-  let type = defineTypeOfValue(json, settings, key);
+  let type = defineTypeOfValue(value, settings, key);
 
-  if (isHidePropertyByKey(key, settings)) {
+  if (
+    isHidePropertyByKey(key, settings) ||
+    isHidePropertyByValue(value, settings)
+  ) {
     return html;
   }
 
@@ -45,31 +48,31 @@ const renderJson = (json, settings, key) => {
   switch (type) {
     case "array":
       if (arraysAsTable.includes(key)) {
-        html += renderArrayToTable(json, settings);
+        html += renderArrayToTable(value, settings);
       } else {
-        html += renderArray(json, settings, key);
+        html += renderArray(value, settings, key);
       }
       break;
     case "object":
-      html += renderObject(json, settings);
+      html += renderObject(value, settings);
       break;
     case "boolean":
-      html += Render.booleanValue(json, settings);
+      html += Render.booleanValue(value, settings);
       break;
     case "null":
       html += Render.nullValue(settings);
       break;
     case "date":
-      html += Render.dateValue(json);
+      html += Render.dateValue(value);
       break;
     case "undefined":
       html += Render.undefinedValue();
       break;
     case "number":
-      html += Render.numberValue(json);
+      html += Render.numberValue(value);
       break;
     case "string":
-      html += Render.stringValue(json);
+      html += Render.stringValue(value);
       break;
   }
   html += "</div>";
@@ -131,33 +134,6 @@ const renderArrayToTable = (
   return html;
 };
 
-const renderObject = (json, settings) => {
-  const {
-    hidePropertiesByKey,
-    hidePropertiesByValue,
-    formatCamelCase,
-  } = settings;
-  let html = '<ul class="objectProperties">';
-
-  for (let i in json) {
-    let key = i;
-
-    if (
-      hidePropertiesByKey.indexOf(key) === -1 &&
-      hidePropertiesByValue.indexOf(json[key]) === -1
-    ) {
-      if (formatCamelCase) {
-        let words = key.match(/((^[a-z])|[A-Z])[a-z]+/g);
-        key = words ? words.join(" ") : key;
-      }
-
-      html += `<li>${renderJson(json[i], settings, key)}</li>`;
-    }
-  }
-
-  return html;
-};
-
 const renderArray = (json, settings, key) => {
   const { hidePropertiesByValue, keysForArrays } = settings;
   let html = "",
@@ -206,6 +182,23 @@ const renderArray = (json, settings, key) => {
       .join("");
   }
   html += "</ul>";
+
+  return html;
+};
+
+const renderObject = (value, settings) => {
+  let html = '<ul class="objectProperties">';
+
+  for (let i in value) {
+    let key = i;
+
+    if (settings.formatCamelCase) {
+      let words = key.match(/((^[a-z])|[A-Z])[a-z]+/g);
+      key = words ? words.join(" ") : key;
+    }
+
+    html += `<li>${renderJson(value[i], settings, key)}</li>`;
+  }
 
   return html;
 };
