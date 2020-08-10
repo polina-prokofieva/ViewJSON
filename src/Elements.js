@@ -94,7 +94,7 @@ const renderTableHeader = (firstElement, settings) => {
 
   for (let key in firstElement) {
     const cell = document.createElement("th");
-    cell.textContent = key;
+    cell.textContent = convertKey(key, settings);
     line.appendChild(cell);
   }
 
