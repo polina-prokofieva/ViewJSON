@@ -172,10 +172,32 @@ const renderArrayToTable = (value, settings) => {
   return tableElement;
 };
 
+const removeAbbrFromBegin = (word) => {
+  const count = (word.match(/[A-Z]/g) || []).length;
+  const isAbbr = /^[A-Z]+$/.test(word);
+
+  if (count > 1 && !isAbbr) {
+    return word.slice(0, count - 1) + " " + word.slice(count - 1);
+  }
+
+  return word;
+};
+
 const convertKey = (key, settings) => {
   if (settings.formatCamelCase) {
-    const words = key.match(/((^[a-z])|[A-Z])[a-z]+/g);
-    return words ? words.join(" ") : key;
+    const words = key.split(" ");
+    const nonEmptyWords = words.filter((word) => word);
+    const wordPattern = /([A-Z]+$)|(\d+)|(((^[a-z])|[A-Z]+)[a-z]+)/g;
+    const parts = [];
+
+    for (let word of nonEmptyWords) {
+      const newParts = word.match(wordPattern) || [];
+      parts.splice(0, 0, ...newParts);
+    }
+
+    return parts
+      ? parts.map((word) => removeAbbrFromBegin(word)).join(" ")
+      : key;
   }
 
   return key;
