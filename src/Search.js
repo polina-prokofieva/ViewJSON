@@ -101,9 +101,29 @@ export default class Search {
     }
   }
 
-  generateTypeOfSearchResults(results, type) {
-    let html = "";
+  renderSearchResult(results) {
+    const searchResults = document.createDocumentFragment();
 
+    if (results.length >= 1) {
+      for (let i = 0; i < results.length; i++) {
+        const searchResultItem = document.createElement("div");
+        const renderedResult = renderJson(results[i], this.viewJson.settings);
+
+        searchResultItem.className = this.resultClassName;
+        searchResultItem.appendChild(renderedResult);
+
+        searchResults.appendChild(searchResultItem);
+      }
+    } else {
+      const nothingFoundElement = document.createElement("p");
+      nothingFoundElement.textContent = "Nothing found";
+      searchResults.appendChild(nothingFoundElement);
+    }
+
+    return searchResults;
+  }
+
+  generateTypeOfSearchResults(results, type) {
     if (!this[`searchHeader_${type}`]) {
       this[`searchHeader_${type}`] = document.createElement("h4");
     }
@@ -111,6 +131,7 @@ export default class Search {
     this[`searchHeader_${type}`].className = `searchHeader${
       !results.length ? " nothingFound" : " open"
     }`;
+
     this[
       `searchHeader_${type}`
     ].innerHTML = `by ${type} (${results.length} found):`;
@@ -121,18 +142,7 @@ export default class Search {
 
     this[`searchResults_${type}`].className = `searchResults jv-visible`;
 
-    if (results.length >= 1) {
-      for (let i = 0; i < results.length; i++) {
-        html += `<div class="${this.resultClassName}">${renderJson(
-          results[i],
-          this.viewJson.settings
-        )}</div>`;
-      }
-    } else {
-      html += `<p> Nothing found </p>`;
-    }
-
-    this[`searchResults_${type}`].innerHTML = html;
+    this[`searchResults_${type}`].appendChild(this.renderSearchResult(results));
   }
 
   renderSearchResults() {
