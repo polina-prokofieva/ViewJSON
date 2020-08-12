@@ -1,4 +1,5 @@
 import Render from "./Render";
+import Keys from "./Keys";
 
 const defineTypeOfValue = (value, { dateAppearence }, key) => {
   let type = typeof value;
@@ -40,7 +41,9 @@ const renderJson = (value, settings, key) => {
   itemElement.className = type;
 
   if (key) {
-    const keyElement = Render.createSimpleDOMElement("span", key, {
+    const convertedKey = Keys.convertCamelCase(key, settings);
+
+    const keyElement = Render.createSimpleDOMElement("span", convertedKey, {
       className: "key",
     });
     const colonElement = Render.createSimpleDOMElement("span", ":&nbsp;", {
@@ -94,7 +97,7 @@ const renderTableHeader = (firstElement, settings) => {
 
   for (let key in firstElement) {
     const cell = document.createElement("th");
-    cell.textContent = convertKey(key, settings);
+    cell.textContent = Keys.convertCamelCase(key, settings);
     line.appendChild(cell);
   }
 
@@ -172,54 +175,6 @@ const renderArrayToTable = (value, settings) => {
   return tableElement;
 };
 
-const removeAbbrFromBegin = (word) => {
-  const count = (word.match(/[A-Z]/g) || []).length;
-  const isAbbr = /^[A-Z]+$/.test(word);
-
-  if (count > 1 && !isAbbr) {
-    return word.slice(0, count - 1) + " " + word.slice(count - 1);
-  }
-
-  return word;
-};
-
-const convertKey = (key, settings) => {
-  if (settings.formatCamelCase) {
-    const words = key.split(" ");
-    const nonEmptyWords = words.filter((word) => word);
-    const wordPattern = /([A-Z]+$)|(\d+)|(((^[a-z])|[A-Z]+)[a-z]+)/g;
-    const parts = [];
-
-    for (let word of nonEmptyWords) {
-      const newParts = word.match(wordPattern) || [];
-      parts.splice(0, 0, ...newParts);
-    }
-
-    return parts
-      ? parts.map((word) => removeAbbrFromBegin(word)).join(" ")
-      : key;
-  }
-
-  return key;
-};
-
-const convertKeyByMask = (item, mask) =>
-  mask.replace(/\{(\w|\.)+\}/g, function (part) {
-    const path = part.slice(1, -1).split(".");
-    let convertedKey = item[path[0]];
-
-    for (let i = 1; i < path.length; i++) {
-      if (convertedKey && convertedKey[path[i]]) {
-        convertedKey = convertedKey[path[i]];
-      } else {
-        convertedKey = "-";
-        break;
-      }
-    }
-
-    return convertedKey || null;
-  });
-
 const renderArray = (value, settings, key) => {
   const { keysForArrays } = settings;
   const filteredItems = value.filter(
@@ -228,13 +183,13 @@ const renderArray = (value, settings, key) => {
   const listElement = document.createElement("ul");
   listElement.className = "arrayElements";
 
-  for (let k in filteredItems) {
+  for (let innerKey in filteredItems) {
     const itemElement = document.createElement("li");
     const keyName = keysForArrays[key]
-      ? convertKeyByMask(filteredItems[k], keysForArrays[key])
-      : k;
+      ? Keys.convertByMask(filteredItems[innerKey], keysForArrays[key])
+      : innerKey;
     const renderedValueElement = renderJson(
-      filteredItems[k],
+      filteredItems[innerKey],
       settings,
       keyName
     );
@@ -257,8 +212,7 @@ const renderObject = (value, settings) => {
 
   for (let key in value) {
     const item = document.createElement("li");
-    const convertedKey = convertKey(key, settings);
-    const renderedValueElement = renderJson(value[key], settings, convertedKey);
+    const renderedValueElement = renderJson(value[key], settings, key);
 
     if (renderedValueElement) {
       item.appendChild(renderedValueElement);
