@@ -18,7 +18,7 @@
     </div>
     <form id="demo">
       <p>Please, insert json for parse here:</p>
-      <textarea rows="5" cols="45" name="text"> </textarea><br />
+      <textarea rows="5" cols="45" name="text"></textarea><br />
 
       <p>Settings (json):</p>
       <textarea rows="5" cols="45" name="text">
@@ -38,6 +38,9 @@
             0,
             ""
           ],
+
+          "hideEmptyArrays": true,
+          "hideEmptyObjects": true,
         
           "hidePropertiesByKey": [ //array of keys by which will be hided parameters of your json.
             "ExpandedDataReturned",
@@ -58,7 +61,7 @@
           "keysForArrays": { //an abject where keys are names of arrays and values are properties which will be shown as keys for corresponding arrays.
             "accounts": "{meta.name} {type} {meta.limit}"
           }
-        }        
+        }
         </textarea
       ><br />
       <p><input type="submit" value="Generate" /></p>

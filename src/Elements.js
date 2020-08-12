@@ -20,8 +20,32 @@ const defineTypeOfValue = (value, { dateAppearence }, key) => {
 const isHidePropertyByKey = (key, { hidePropertiesByKey }) =>
   hidePropertiesByKey.includes(key);
 
-const isHidePropertyByValue = (value, { hidePropertiesByValue }) =>
-  hidePropertiesByValue.includes(value);
+const isHidePropertyByValue = (
+  value,
+  { hidePropertiesByValue, hideEmptyArrays, hideEmptyObjects }
+) =>
+  hidePropertiesByValue.includes(value) ||
+  (Array.isArray(value) && hideEmptyArrays && value.length === 0) ||
+  (typeof value === "object" &&
+    hideEmptyObjects &&
+    Object.keys(value).length === 0);
+
+const isAllInnerValuesHided = (value, settings) => {
+  if (typeof value === "object") {
+    for (let innerKey in value) {
+      if (
+        !(
+          isHidePropertyByValue(value[innerKey], settings) ||
+          isAllInnerValuesHided(value[innerKey], settings)
+        )
+      ) {
+        return false;
+      }
+    }
+    return true;
+  }
+  return false;
+};
 
 const renderJson = (value, settings, key) => {
   const { arraysAsTable } = settings;
@@ -33,7 +57,8 @@ const renderJson = (value, settings, key) => {
 
   if (
     isHidePropertyByKey(key, settings) ||
-    isHidePropertyByValue(value, settings)
+    isHidePropertyByValue(value, settings) ||
+    isAllInnerValuesHided(value, settings)
   ) {
     return null;
   }
@@ -139,7 +164,10 @@ const removeColumnsByAllValues = (rows, settings) => {
   for (let i = 0; i < rows.length; i++) {
     for (let key of keysToDelete) {
       if (!isHidePropertyByKey(key, settings)) {
-        if (!isHidePropertyByValue(rows[i][key], settings)) {
+        if (
+          !isHidePropertyByValue(rows[i][key], settings) &&
+          !isAllInnerValuesHided(rows[i][key], settings)
+        ) {
           keysToDelete.splice(keysToDelete.indexOf(key), 1);
         }
       }
@@ -157,7 +185,9 @@ const removeColumnsByAllValues = (rows, settings) => {
 
 const renderArrayToTable = (value, settings) => {
   const filteredItems = value.filter(
-    (item) => !isHidePropertyByValue(item, settings)
+    (item) =>
+      !isHidePropertyByValue(item, settings) &&
+      !isAllInnerValuesHided(item, settings)
   );
 
   const cleanedRows = removeColumnsByAllValues(filteredItems, settings);
@@ -178,7 +208,9 @@ const renderArrayToTable = (value, settings) => {
 const renderArray = (value, settings, key) => {
   const { keysForArrays } = settings;
   const filteredItems = value.filter(
-    (item) => !isHidePropertyByValue(item, settings)
+    (item) =>
+      !isHidePropertyByValue(item, settings) &&
+      !isAllInnerValuesHided(item, settings)
   );
   const listElement = document.createElement("ul");
   listElement.className = "arrayElements";
