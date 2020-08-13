@@ -109,10 +109,11 @@ export default class Search {
         const searchResultItem = document.createElement("div");
         const renderedResult = renderJson(results[i], this.viewJson.settings);
 
-        searchResultItem.className = this.resultClassName;
-        searchResultItem.appendChild(renderedResult);
-
-        searchResults.appendChild(searchResultItem);
+        if (renderedResult) {
+          searchResultItem.className = this.resultClassName;
+          searchResultItem.appendChild(renderedResult);
+          searchResults.appendChild(searchResultItem);
+        }
       }
     } else {
       const nothingFoundElement = document.createElement("p");
@@ -124,25 +125,32 @@ export default class Search {
   }
 
   generateTypeOfSearchResults(results, type) {
-    if (!this[`searchHeader_${type}`]) {
-      this[`searchHeader_${type}`] = document.createElement("h4");
+    const renderedResults = this.renderSearchResult(results);
+    const searchHeader = `searchHeader_${type}`;
+    const searchResults = `searchResults_${type}`;
+    let numberOfResults;
+
+    if (!this[searchHeader]) {
+      this[searchHeader] = document.createElement("h4");
     }
 
-    this[`searchHeader_${type}`].className = `searchHeader${
+    this[searchHeader].className = `searchHeader${
       !results.length ? " nothingFound" : " open"
     }`;
 
-    this[
-      `searchHeader_${type}`
-    ].innerHTML = `by ${type} (${results.length} found):`;
-
-    if (!this[`searchResults_${type}`]) {
-      this[`searchResults_${type}`] = document.createElement("div");
+    if (!this[searchResults]) {
+      this[searchResults] = document.createElement("div");
     }
 
-    this[`searchResults_${type}`].className = `searchResults jv-visible`;
+    this[searchResults].innerHTML = "";
+    this[searchResults].className = `searchResults jv-visible`;
 
-    this[`searchResults_${type}`].appendChild(this.renderSearchResult(results));
+    if (renderedResults) {
+      this[searchResults].appendChild(renderedResults);
+    }
+
+    numberOfResults = this[searchResults].children.length;
+    this[searchHeader].innerHTML = `by ${type} (${numberOfResults} found):`;
   }
 
   renderSearchResults() {
