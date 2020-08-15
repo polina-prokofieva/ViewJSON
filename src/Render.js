@@ -45,41 +45,29 @@ const nullValue = ({ nullAppearence }) =>
 const undefinedValue = () =>
   createSimpleDOMElement("span", "undefined", { className: "undefined" });
 
-const hideAllButton = () => {
-  const element = document.createElement("input");
+const hideAllButton = () =>
+  createSimpleDOMElement("input", null, {
+    id: "hideAll",
+    type: "button",
+    value: "Hide All",
+  });
 
-  element.id = "hideAll";
-  element.type = "button";
-  element.value = "Hide All";
+const searchInput = () =>
+  createSimpleDOMElement("input", null, { name: "search" });
 
-  return element;
-};
+const searchButton = () =>
+  createSimpleDOMElement("input", null, {
+    type: "submit",
+    id: "search",
+    value: "Search",
+  });
 
-const searchInput = () => {
-  const element = document.createElement("input");
-  element.name = "search";
-
-  return element;
-};
-
-const searchButton = () => {
-  const element = document.createElement("input");
-
-  element.type = "submit";
-  element.id = "search";
-  element.value = "Search";
-
-  return element;
-};
-
-const resetButton = () => {
-  const element = document.createElement("input");
-  element.type = "button";
-  element.id = "reset";
-  element.value = "Reset";
-
-  return element;
-};
+const resetButton = () =>
+  createSimpleDOMElement("input", null, {
+    type: "button",
+    id: "reset",
+    value: "Reset",
+  });
 
 const Render = {
   numberValue,
