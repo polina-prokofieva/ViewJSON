@@ -14,11 +14,11 @@ const convertCamelCase = (key, settings) => {
     const words = key.split(" ");
     const nonEmptyWords = words.filter((word) => word);
     const wordPattern = /([A-Z]+$)|(\d+)|(((^[a-z])|[A-Z]+)[a-z]+)/g;
-    const parts = [];
+    let parts = [];
 
     for (let word of nonEmptyWords) {
-      const newParts = word.match(wordPattern) || [];
-      parts.splice(0, 0, ...newParts);
+      const newParts = word.match(wordPattern) || [word];
+      parts = parts.concat(newParts);
     }
 
     return parts
@@ -29,10 +29,12 @@ const convertCamelCase = (key, settings) => {
   return key;
 };
 
-const convertByMask = (item, mask) =>
-  mask.replace(/\{(\w|\.)+\}/g, function (part) {
+const convertByMask = (value, mask) => {
+  const partPattern = /\{(\w|\.)+?\}/g;
+  const key = mask.replace(partPattern, function (part) {
     const path = part.slice(1, -1).split(".");
-    let convertedKey = item[path[0]];
+
+    let convertedKey = value[path[0]];
 
     for (let i = 1; i < path.length; i++) {
       if (convertedKey && convertedKey[path[i]]) {
@@ -43,7 +45,10 @@ const convertByMask = (item, mask) =>
       }
     }
 
-    return convertedKey || "";
+    return convertedKey || "-";
   });
+
+  return key;
+};
 
 export default { convertCamelCase, convertByMask };

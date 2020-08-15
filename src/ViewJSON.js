@@ -102,7 +102,7 @@ export default class ViewJSON {
   }
 
   generateJSON() {
-    const renderedJSON = renderJson(this.root, this.settings);
+    const renderedJSON = renderJson(null, this.root, this.settings);
 
     this.mainElement.appendChild(renderedJSON);
     this.state = 0;

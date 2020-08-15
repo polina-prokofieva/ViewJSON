@@ -18,7 +18,7 @@ const defineTypeOfValue = (value, { dateAppearence }, key) => {
   return type;
 };
 
-const renderJson = (value, settings, key) => {
+const renderJson = (key, value, settings, options = {}) => {
   const { arraysAsTable } = settings;
 
   const itemElement = document.createElement("div");
@@ -37,7 +37,9 @@ const renderJson = (value, settings, key) => {
   itemElement.className = type;
 
   if (key) {
-    const convertedKey = Keys.convertCamelCase(key, settings);
+    const convertedKey = options.mask
+      ? Keys.convertByMask(value, options.mask)
+      : Keys.convertCamelCase(key, settings);
 
     const keyElement = Render.createSimpleDOMElement("span", convertedKey, {
       className: "key",
@@ -151,12 +153,8 @@ const removeColumnsByAllValues = (rows, settings) => {
   return cleanedRow;
 };
 
-const renderArrayToTable = (value, settings) => {
-  const filteredItems = value.filter((item) =>
-    Settings.isShowProperty(item, settings)
-  );
-
-  const cleanedRows = removeColumnsByAllValues(filteredItems, settings);
+const renderArrayToTable = (data, settings) => {
+  const cleanedRows = removeColumnsByAllValues(data, settings);
 
   const tableHeader = renderTableHeader(cleanedRows[0], settings);
   const tableBody = renderTableBody(cleanedRows, settings);
@@ -171,23 +169,17 @@ const renderArrayToTable = (value, settings) => {
   return tableElement;
 };
 
-const renderArray = (value, settings, key) => {
-  const { keysForArrays } = settings;
-  const filteredItems = value.filter((item) =>
-    Settings.isShowProperty(item, settings)
-  );
+const renderArray = (data, settings, key) => {
   const listElement = document.createElement("ul");
   listElement.className = "arrayElements";
 
-  for (let innerKey in filteredItems) {
+  for (let innerKey in data) {
     const itemElement = document.createElement("li");
-    const keyName = keysForArrays[key]
-      ? Keys.convertByMask(filteredItems[innerKey], keysForArrays[key])
-      : innerKey;
     const renderedValueElement = renderJson(
-      filteredItems[innerKey],
+      innerKey,
+      data[innerKey],
       settings,
-      keyName
+      { mask: settings.keysForArrays[key] }
     );
 
     if (renderedValueElement) {
@@ -208,7 +200,7 @@ const renderObject = (value, settings) => {
 
   for (let key in value) {
     const item = document.createElement("li");
-    const renderedValueElement = renderJson(value[key], settings, key);
+    const renderedValueElement = renderJson(key, value[key], settings);
 
     if (renderedValueElement) {
       item.appendChild(renderedValueElement);
