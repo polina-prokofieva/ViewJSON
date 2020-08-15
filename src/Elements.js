@@ -20,9 +20,9 @@ const defineTypeOfValue = (value, { dateAppearence }, key) => {
 
 const renderJson = (key, value, settings, options = {}) => {
   const { arraysAsTable } = settings;
-
   const itemElement = document.createElement("div");
   let valueElement;
+  let filteredData;
 
   const type = defineTypeOfValue(value, settings, key);
 
@@ -36,30 +36,25 @@ const renderJson = (key, value, settings, options = {}) => {
 
   itemElement.className = type;
 
-  if (key) {
-    const convertedKey = options.mask
-      ? Keys.convertByMask(value, options.mask)
-      : Keys.convertCamelCase(key, settings);
-
-    const keyElement = Render.createSimpleDOMElement("span", convertedKey, {
-      className: "key",
-    });
-    const colonElement = Render.createSimpleDOMElement("span", ":&nbsp;", {
-      className: "colon",
-    });
-    itemElement.appendChild(keyElement);
-    itemElement.appendChild(colonElement);
-  }
-
   switch (type) {
     case "array":
+      filteredData = Settings.filterElements(value, settings);
+      if (filteredData.length === 1) {
+        return renderJson(key, filteredData[0], settings);
+      }
       if (arraysAsTable.includes(key)) {
-        valueElement = renderArrayToTable(value, settings);
+        valueElement = renderArrayToTable(filteredData, settings);
       } else {
-        valueElement = renderArray(value, settings, key);
+        valueElement = renderArray(filteredData, settings, key);
       }
       break;
     case "object":
+      filteredData = Settings.filterElements(value, settings);
+      const keys = Object.keys(filteredData);
+      if (keys.length === 1) {
+        const nextKey = key ? `${key} | ${keys[0]}` : null;
+        return renderJson(nextKey, filteredData[keys[0]], settings);
+      }
       valueElement = renderObject(value, settings);
       break;
     case "boolean":
@@ -80,6 +75,21 @@ const renderJson = (key, value, settings, options = {}) => {
     case "string":
       valueElement = Render.stringValue(value);
       break;
+  }
+
+  if (key) {
+    const convertedKey = options.mask
+      ? Keys.convertByMask(value, options.mask)
+      : Keys.convertCamelCase(key, settings);
+
+    const keyElement = Render.createSimpleDOMElement("span", convertedKey, {
+      className: "key",
+    });
+    const colonElement = Render.createSimpleDOMElement("span", ":&nbsp;", {
+      className: "colon",
+    });
+    itemElement.appendChild(keyElement);
+    itemElement.appendChild(colonElement);
   }
 
   itemElement.appendChild(valueElement);
