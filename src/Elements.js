@@ -39,12 +39,13 @@ const renderJson = (key, value, settings, options = {}) => {
   switch (type) {
     case "array":
       filteredData = Settings.filterElements(value, settings);
-      if (filteredData.length === 1) {
-        return renderJson(key, filteredData[0], settings);
-      }
+
       if (arraysAsTable.includes(key)) {
         valueElement = renderArrayToTable(filteredData, settings);
       } else {
+        if (filteredData.length === 1) {
+          return renderJson(key, filteredData[0], settings);
+        }
         valueElement = renderArray(filteredData, settings, key);
       }
       break;
@@ -113,7 +114,7 @@ const renderTableHeader = (firstElement, settings) => {
 };
 
 const renderTableBody = (elements, settings) => {
-  const { nullAppearence } = settings;
+  const { nullAppearence, boolAppearence } = settings;
   const body = document.createElement("tbody");
 
   for (let i = 0; i < elements.length; i++) {
@@ -124,10 +125,14 @@ const renderTableBody = (elements, settings) => {
       const cell = document.createElement("td");
       let value = "";
 
-      if (item[key] && typeof item[key] === "object") {
+      if (item[key] === null) {
+        value = nullAppearence;
+      } else if (typeof item[key] === "object") {
         value = "[Object]";
+      } else if (typeof item[key] === "boolean") {
+        value = boolAppearence[Number(item[key])];
       } else {
-        value = item[key] || nullAppearence;
+        value = item[key];
       }
 
       cell.textContent = value;
