@@ -21,7 +21,7 @@ export default class ViewJSON {
     this.clear = this.clear.bind(this);
 
     try {
-      this.json = JSON.parse(json.replace(/\s/g, ""));
+      this.json = JSON.parse(json);
       this.settings = JSON.parse(settings.replace(/\/\/.*\n/g, ""));
 
       this.search = new Search(this);
