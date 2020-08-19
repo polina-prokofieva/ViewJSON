@@ -1,22 +1,23 @@
-const isHidePropertyByKey = (key, { hidePropertiesByKey }) =>
-  hidePropertiesByKey.includes(key);
+import { Settings } from "./Value";
 
-const isHideEmptyArrays = (value, { hideEmptyArrays }) =>
-  Array.isArray(value) && hideEmptyArrays && value.length === 0;
+const isHidePropertyByKey = (key) => Settings.hidePropertiesByKey.includes(key);
 
-const isHideEmptyObjects = (value, { hideEmptyObjects }) =>
+const isHideEmptyArrays = (value) =>
+  Array.isArray(value) && Settings.hideEmptyArrays && value.length === 0;
+
+const isHideEmptyObjects = (value) =>
   typeof value === "object" &&
   value !== null &&
-  hideEmptyObjects &&
+  Settings.hideEmptyObjects &&
   Object.keys(value).length === 0;
 
-const isHidePropertyByValue = (value, { hidePropertiesByValue }) =>
-  hidePropertiesByValue.includes(value);
+const isHidePropertyByValue = (value) =>
+  Settings.hidePropertiesByValue.includes(value);
 
-const isAllInnerValuesHided = (data, settings) => {
+const isAllInnerValuesHided = (data) => {
   if (typeof data === "object" && data !== null) {
     for (let key in data) {
-      if (isShowProperty(data[key], settings)) {
+      if (isShowProperty(data[key])) {
         return false;
       }
     }
@@ -25,29 +26,26 @@ const isAllInnerValuesHided = (data, settings) => {
   return false;
 };
 
-const isShowProperty = (property, settings) =>
-  !isHidePropertyByValue(property, settings) &&
-  !isHideEmptyArrays(property, settings) &&
-  !isHideEmptyObjects(property, settings) &&
-  !isAllInnerValuesHided(property, settings);
+const isShowProperty = (property) =>
+  !isHidePropertyByValue(property) &&
+  !isHideEmptyArrays(property) &&
+  !isHideEmptyObjects(property) &&
+  !isAllInnerValuesHided(property);
 
-const filterElements = (data, settings) => {
+const filterElements = (data) => {
   if (Array.isArray(data)) {
     return data.filter(
       (value, key) =>
         !(
-          isHidePropertyByKey(key, settings) ||
-          isHidePropertyByValue(value, settings) ||
-          isAllInnerValuesHided(value, settings)
+          isHidePropertyByKey(key) ||
+          isHidePropertyByValue(value) ||
+          isAllInnerValuesHided(value)
         )
     );
   } else {
     let filtered = {};
     for (let key in data) {
-      if (
-        isShowProperty(data[key], settings) &&
-        !isHidePropertyByKey(key, settings)
-      ) {
+      if (isShowProperty(data[key]) && !isHidePropertyByKey(key)) {
         filtered[key] = data[key];
       }
     }

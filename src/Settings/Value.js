@@ -1,10 +1,16 @@
-const defaultSettings = {
+export let Settings = {
   root: "",
   nullAppearence: "null",
-  hidePropertiesByValue: [false, true],
+  boolAppearence: [false, true],
+  hidePropertiesByValue: [],
   hidePropertiesByKey: [],
   arraysAsTable: [],
   keysForArrays: {},
 };
 
-export default defaultSettings;
+export const setSettings = (newSettings) => {
+  Settings = {
+    ...Settings,
+    ...newSettings,
+  };
+};

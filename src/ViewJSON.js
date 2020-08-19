@@ -1,7 +1,7 @@
 import Search from "./Search";
 import FormAction from "./FormActions";
 import renderJson from "./View/Elements";
-import Settings from "./Settings/Value";
+import { Settings, setSettings } from "./Settings/Value";
 
 export default class ViewJSON {
   constructor(el = document.body, json = "", settings = "") {
@@ -23,15 +23,16 @@ export default class ViewJSON {
 
     try {
       this.json = JSON.parse(json);
-      this.settings = settings
-        ? JSON.parse(settings.replace(/\/\/.*\n/g, ""))
-        : Settings;
+      if (settings) {
+        this.settings = JSON.parse(settings.replace(/\/\/.*\n/g, ""));
+      }
+      setSettings(this.settings);
 
       this.search = new Search(this);
       this.form = new FormAction(this);
 
       this.state = 0; // 0 - json, 1 - search results
-      this.root = this.settings.root || this.json;
+      this.root = Settings.root || this.json;
     } catch (err) {
       this.errorMessage = err.message;
       console.error(err);
@@ -105,14 +106,14 @@ export default class ViewJSON {
   }
 
   generateJSON() {
-    const renderedJSON = renderJson(null, this.root, this.settings);
+    const renderedJSON = renderJson(null, this.root);
 
     this.mainElement.appendChild(renderedJSON);
     this.state = 0;
   }
 
   generate() {
-    if (!this.form.actionsElement && this.settings.showSearchPanel) {
+    if (!this.form.actionsElement && Settings.showSearchPanel) {
       this.el.appendChild(this.form.generate());
       this.form.addEvents();
     }
@@ -129,8 +130,8 @@ export default class ViewJSON {
   }
 
   render() {
-    if (this.settings.root) {
-      let rootKeys = this.settings.root.split("/");
+    if (Settings.root) {
+      let rootKeys = Settings.root.split("/");
       for (let i = 0; i < rootKeys.length; i++) {
         this.root = this.root[rootKeys[i]];
       }

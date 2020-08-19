@@ -1,8 +1,10 @@
 import Render from "./Render";
 import Keys from "../Keys";
 import Control from "../Settings/Control";
+import { Settings } from "../Settings/Value";
 
-const defineTypeOfValue = (value, { dateAppearence }, key) => {
+const defineTypeOfValue = (value, key) => {
+  const { dateAppearence } = Settings;
   let type = typeof value;
 
   if (type === "object") {
@@ -22,18 +24,18 @@ const defineTypeOfValue = (value, { dateAppearence }, key) => {
   return type;
 };
 
-const renderJson = (key, value, settings, options = {}) => {
-  const { arraysAsTable, collapseSingleKeys } = settings;
+const renderJson = (key, value, options = {}) => {
+  const { arraysAsTable, collapseSingleKeys } = Settings;
   const itemElement = document.createElement("div");
   let valueElement;
   let filteredData;
 
-  const type = defineTypeOfValue(value, settings, key);
+  const type = defineTypeOfValue(value, key);
 
   if (
-    Control.isHidePropertyByKey(key, settings) ||
-    Control.isHidePropertyByValue(value, settings) ||
-    Control.isAllInnerValuesHided(value, settings)
+    Control.isHidePropertyByKey(key) ||
+    Control.isHidePropertyByValue(value) ||
+    Control.isAllInnerValuesHided(value)
   ) {
     return null;
   }
@@ -42,31 +44,31 @@ const renderJson = (key, value, settings, options = {}) => {
 
   switch (type) {
     case "array":
-      filteredData = Control.filterElements(value, settings);
+      filteredData = Control.filterElements(value);
 
       if (arraysAsTable.includes(key)) {
-        valueElement = renderArrayToTable(filteredData, settings);
+        valueElement = renderArrayToTable(filteredData);
       } else {
         if (collapseSingleKeys && filteredData.length === 1) {
-          return renderJson(key, filteredData[0], settings);
+          return renderJson(key, filteredData[0]);
         }
-        valueElement = renderArray(filteredData, settings, key);
+        valueElement = renderArray(key, filteredData);
       }
       break;
     case "object":
-      filteredData = Control.filterElements(value, settings);
+      filteredData = Control.filterElements(value);
       const keys = Object.keys(filteredData);
       if (collapseSingleKeys && keys.length === 1) {
         const nextKey = key ? `${key} | ${keys[0]}` : null;
-        return renderJson(nextKey, filteredData[keys[0]], settings);
+        return renderJson(nextKey, filteredData[keys[0]]);
       }
-      valueElement = renderObject(value, settings);
+      valueElement = renderObject(value);
       break;
     case "boolean":
-      valueElement = Render.booleanValue(value, settings);
+      valueElement = Render.booleanValue(value);
       break;
     case "null":
-      valueElement = Render.nullValue(settings);
+      valueElement = Render.nullValue();
       break;
     case "date":
       valueElement = Render.dateValue(value);
@@ -85,7 +87,7 @@ const renderJson = (key, value, settings, options = {}) => {
   if (key) {
     const convertedKey = options.mask
       ? Keys.convertByMask(value, options.mask)
-      : Keys.convertCamelCase(key, settings);
+      : Keys.convertCamelCase(key);
 
     const keyElement = Render.createSimpleDOMElement("span", convertedKey, {
       className: "key",
@@ -102,7 +104,7 @@ const renderJson = (key, value, settings, options = {}) => {
   return itemElement;
 };
 
-const renderTableHeader = (firstElement, settings) => {
+const renderTableHeader = (firstElement) => {
   const line = document.createElement("tr");
   const head = document.createElement("thead");
 
@@ -110,15 +112,15 @@ const renderTableHeader = (firstElement, settings) => {
 
   for (let key in firstElement) {
     const cell = document.createElement("th");
-    cell.textContent = Keys.convertCamelCase(key, settings);
+    cell.textContent = Keys.convertCamelCase(key);
     line.appendChild(cell);
   }
 
   return head;
 };
 
-const renderTableBody = (elements, settings) => {
-  const { nullAppearence, boolAppearence } = settings;
+const renderTableBody = (elements) => {
+  const { nullAppearence, boolAppearence } = Settings;
   const body = document.createElement("tbody");
 
   for (let i = 0; i < elements.length; i++) {
@@ -148,15 +150,15 @@ const renderTableBody = (elements, settings) => {
   return body;
 };
 
-const removeColumnsByAllValues = (rows, settings) => {
+const removeColumnsByAllValues = (rows) => {
   let cleanedRow = [...rows];
   const firstRow = cleanedRow[0];
   const keysToDelete = Object.keys(firstRow);
 
   for (let i = 0; i < rows.length; i++) {
     for (let key of keysToDelete) {
-      if (!Control.isHidePropertyByKey(key, settings)) {
-        if (Control.isShowProperty(rows[i][key], settings)) {
+      if (!Control.isHidePropertyByKey(key)) {
+        if (Control.isShowProperty(rows[i][key])) {
           keysToDelete.splice(keysToDelete.indexOf(key), 1);
         }
       }
@@ -172,11 +174,11 @@ const removeColumnsByAllValues = (rows, settings) => {
   return cleanedRow;
 };
 
-const renderArrayToTable = (data, settings) => {
-  const cleanedRows = removeColumnsByAllValues(data, settings);
+const renderArrayToTable = (data) => {
+  const cleanedRows = removeColumnsByAllValues(data);
 
-  const tableHeader = renderTableHeader(cleanedRows[0], settings);
-  const tableBody = renderTableBody(cleanedRows, settings);
+  const tableHeader = renderTableHeader(cleanedRows[0]);
+  const tableBody = renderTableBody(cleanedRows);
 
   const tableElement = Render.createSimpleDOMElement("table", "", {
     className: "arrayElements",
@@ -188,18 +190,15 @@ const renderArrayToTable = (data, settings) => {
   return tableElement;
 };
 
-const renderArray = (data, settings, key) => {
+const renderArray = (data, key) => {
   const listElement = document.createElement("ul");
   listElement.className = "arrayElements";
 
   for (let innerKey in data) {
     const itemElement = document.createElement("li");
-    const renderedValueElement = renderJson(
-      innerKey,
-      data[innerKey],
-      settings,
-      { mask: settings.keysForArrays[key] }
-    );
+    const renderedValueElement = renderJson(innerKey, data[innerKey], {
+      mask: Settings.keysForArrays[key],
+    });
 
     if (renderedValueElement) {
       itemElement.className = "element";
@@ -211,7 +210,7 @@ const renderArray = (data, settings, key) => {
   return listElement;
 };
 
-const renderObject = (value, settings) => {
+const renderObject = (value) => {
   const listElement = document.createElement("ul");
   const items = document.createDocumentFragment();
 
@@ -219,7 +218,7 @@ const renderObject = (value, settings) => {
 
   for (let key in value) {
     const item = document.createElement("li");
-    const renderedValueElement = renderJson(key, value[key], settings);
+    const renderedValueElement = renderJson(key, value[key]);
 
     if (renderedValueElement) {
       item.appendChild(renderedValueElement);

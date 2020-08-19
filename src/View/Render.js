@@ -1,3 +1,5 @@
+import { Settings } from "./Value";
+
 const createSimpleDOMElement = (tag, value = "", options = {}) => {
   const element = document.createElement(tag);
   element.innerHTML = value;
@@ -34,17 +36,15 @@ const dateValue = (value) => {
   });
 };
 
-const booleanValue = (json, { boolAppearence }) =>
-  createSimpleDOMElement(
-    "span",
-    boolAppearence ? boolAppearence[+json] : json,
-    {
-      className: "boolean",
-    }
-  );
+const booleanValue = (json) =>
+  createSimpleDOMElement("span", Settings.boolAppearence[+json], {
+    className: "boolean",
+  });
 
-const nullValue = ({ nullAppearence }) =>
-  createSimpleDOMElement("span", nullAppearence, { className: "null" });
+const nullValue = () =>
+  createSimpleDOMElement("span", Settings.nullAppearence, {
+    className: "null",
+  });
 
 const undefinedValue = () =>
   createSimpleDOMElement("span", "undefined", { className: "undefined" });

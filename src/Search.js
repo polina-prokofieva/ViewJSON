@@ -107,11 +107,7 @@ export default class Search {
     if (results.length >= 1) {
       for (let i = 0; i < results.length; i++) {
         const searchResultItem = document.createElement("div");
-        const renderedResult = renderJson(
-          null,
-          results[i],
-          this.viewJson.settings
-        );
+        const renderedResult = renderJson(null, results[i]);
 
         if (renderedResult) {
           searchResultItem.className = this.resultClassName;

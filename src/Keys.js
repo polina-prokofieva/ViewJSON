@@ -1,3 +1,5 @@
+import { Settings } from "./Value";
+
 const removeAbbrFromBegin = (word) => {
   const count = (word.match(/[A-Z]/g) || []).length;
   const isAbbr = /^[A-Z]+$/.test(word);
@@ -9,8 +11,8 @@ const removeAbbrFromBegin = (word) => {
   return word;
 };
 
-const convertCamelCase = (key, settings) => {
-  if (settings.formatCamelCase) {
+const convertCamelCase = (key) => {
+  if (Settings.formatCamelCase) {
     const words = key.split(" ");
     const nonEmptyWords = words.filter((word) => word);
     const wordPattern = /([A-Z]+$)|(\d+)|(((^[a-z])|[A-Z]+)[a-z]+)/g;
