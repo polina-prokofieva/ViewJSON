@@ -1,4 +1,4 @@
-import renderJson from "./Elements";
+import renderJson from "./View/Elements";
 
 export default class Search {
   constructor(viewJson) {

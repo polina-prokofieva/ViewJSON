@@ -1,4 +1,4 @@
-import Render from "./Render";
+import Render from "./View/Render";
 
 export default class FormAction {
   constructor(viewJSON) {

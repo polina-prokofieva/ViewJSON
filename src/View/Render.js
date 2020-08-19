@@ -35,9 +35,13 @@ const dateValue = (value) => {
 };
 
 const booleanValue = (json, { boolAppearence }) =>
-  createSimpleDOMElement("span", boolAppearence[+json], {
-    className: "boolean",
-  });
+  createSimpleDOMElement(
+    "span",
+    boolAppearence ? boolAppearence[+json] : json,
+    {
+      className: "boolean",
+    }
+  );
 
 const nullValue = ({ nullAppearence }) =>
   createSimpleDOMElement("span", nullAppearence, { className: "null" });

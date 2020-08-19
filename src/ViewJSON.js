@@ -1,6 +1,7 @@
 import Search from "./Search";
 import FormAction from "./FormActions";
-import renderJson from "./Elements";
+import renderJson from "./View/Elements";
+import Settings from "./Settings/Value";
 
 export default class ViewJSON {
   constructor(el = document.body, json = "", settings = "") {
@@ -22,7 +23,9 @@ export default class ViewJSON {
 
     try {
       this.json = JSON.parse(json);
-      this.settings = JSON.parse(settings.replace(/\/\/.*\n/g, ""));
+      this.settings = settings
+        ? JSON.parse(settings.replace(/\/\/.*\n/g, ""))
+        : Settings;
 
       this.search = new Search(this);
       this.form = new FormAction(this);

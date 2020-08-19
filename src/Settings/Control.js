@@ -1,18 +1,20 @@
 const isHidePropertyByKey = (key, { hidePropertiesByKey }) =>
   hidePropertiesByKey.includes(key);
 
-const isHidePropertyByValue = (
-  value,
-  { hidePropertiesByValue, hideEmptyArrays, hideEmptyObjects }
-) =>
-  hidePropertiesByValue.includes(value) ||
-  (Array.isArray(value) && hideEmptyArrays && value.length === 0) ||
-  (typeof value === "object" &&
-    hideEmptyObjects &&
-    Object.keys(value).length === 0);
+const isHideEmptyArrays = (value, { hideEmptyArrays }) =>
+  Array.isArray(value) && hideEmptyArrays && value.length === 0;
+
+const isHideEmptyObjects = (value, { hideEmptyObjects }) =>
+  typeof value === "object" &&
+  value !== null &&
+  hideEmptyObjects &&
+  Object.keys(value).length === 0;
+
+const isHidePropertyByValue = (value, { hidePropertiesByValue }) =>
+  hidePropertiesByValue.includes(value);
 
 const isAllInnerValuesHided = (data, settings) => {
-  if (typeof data === "object") {
+  if (typeof data === "object" && data !== null) {
     for (let key in data) {
       if (isShowProperty(data[key], settings)) {
         return false;
@@ -25,6 +27,8 @@ const isAllInnerValuesHided = (data, settings) => {
 
 const isShowProperty = (property, settings) =>
   !isHidePropertyByValue(property, settings) &&
+  !isHideEmptyArrays(property, settings) &&
+  !isHideEmptyObjects(property, settings) &&
   !isAllInnerValuesHided(property, settings);
 
 const filterElements = (data, settings) => {

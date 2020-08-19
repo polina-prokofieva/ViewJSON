@@ -1,6 +1,6 @@
 import Render from "./Render";
-import Keys from "./Keys";
-import Settings from "./Settings";
+import Keys from "../Keys";
+import Control from "../Settings/Control";
 
 const defineTypeOfValue = (value, { dateAppearence }, key) => {
   let type = typeof value;
@@ -11,7 +11,11 @@ const defineTypeOfValue = (value, { dateAppearence }, key) => {
     } else if (value === null) {
       type = "null";
     }
-  } else if (dateAppearence.keys.includes(key)) {
+  } else if (
+    dateAppearence &&
+    dateAppearence.keys &&
+    dateAppearence.keys.includes(key)
+  ) {
     type = "date";
   }
 
@@ -27,9 +31,9 @@ const renderJson = (key, value, settings, options = {}) => {
   const type = defineTypeOfValue(value, settings, key);
 
   if (
-    Settings.isHidePropertyByKey(key, settings) ||
-    Settings.isHidePropertyByValue(value, settings) ||
-    Settings.isAllInnerValuesHided(value, settings)
+    Control.isHidePropertyByKey(key, settings) ||
+    Control.isHidePropertyByValue(value, settings) ||
+    Control.isAllInnerValuesHided(value, settings)
   ) {
     return null;
   }
@@ -38,7 +42,7 @@ const renderJson = (key, value, settings, options = {}) => {
 
   switch (type) {
     case "array":
-      filteredData = Settings.filterElements(value, settings);
+      filteredData = Control.filterElements(value, settings);
 
       if (arraysAsTable.includes(key)) {
         valueElement = renderArrayToTable(filteredData, settings);
@@ -50,7 +54,7 @@ const renderJson = (key, value, settings, options = {}) => {
       }
       break;
     case "object":
-      filteredData = Settings.filterElements(value, settings);
+      filteredData = Control.filterElements(value, settings);
       const keys = Object.keys(filteredData);
       if (collapseSingleKeys && keys.length === 1) {
         const nextKey = key ? `${key} | ${keys[0]}` : null;
@@ -151,8 +155,8 @@ const removeColumnsByAllValues = (rows, settings) => {
 
   for (let i = 0; i < rows.length; i++) {
     for (let key of keysToDelete) {
-      if (!Settings.isHidePropertyByKey(key, settings)) {
-        if (Settings.isShowProperty(rows[i][key], settings)) {
+      if (!Control.isHidePropertyByKey(key, settings)) {
+        if (Control.isShowProperty(rows[i][key], settings)) {
           keysToDelete.splice(keysToDelete.indexOf(key), 1);
         }
       }
