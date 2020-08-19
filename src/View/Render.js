@@ -1,4 +1,4 @@
-import { Settings } from "./Value";
+import { Settings } from "../Settings/Value";
 
 const createSimpleDOMElement = (tag, value = "", options = {}) => {
   const element = document.createElement(tag);

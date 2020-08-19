@@ -1,4 +1,4 @@
-import { Settings } from "./Value";
+import { Settings } from "./Settings/Value";
 
 const removeAbbrFromBegin = (word) => {
   const count = (word.match(/[A-Z]/g) || []).length;

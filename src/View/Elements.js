@@ -190,7 +190,7 @@ const renderArrayToTable = (data) => {
   return tableElement;
 };
 
-const renderArray = (data, key) => {
+const renderArray = (key, data) => {
   const listElement = document.createElement("ul");
   listElement.className = "arrayElements";
 
