@@ -19,7 +19,7 @@ const defineTypeOfValue = (value, { dateAppearence }, key) => {
 };
 
 const renderJson = (key, value, settings, options = {}) => {
-  const { arraysAsTable } = settings;
+  const { arraysAsTable, collapseSingleKeys } = settings;
   const itemElement = document.createElement("div");
   let valueElement;
   let filteredData;
@@ -43,7 +43,7 @@ const renderJson = (key, value, settings, options = {}) => {
       if (arraysAsTable.includes(key)) {
         valueElement = renderArrayToTable(filteredData, settings);
       } else {
-        if (filteredData.length === 1) {
+        if (collapseSingleKeys && filteredData.length === 1) {
           return renderJson(key, filteredData[0], settings);
         }
         valueElement = renderArray(filteredData, settings, key);
@@ -52,7 +52,7 @@ const renderJson = (key, value, settings, options = {}) => {
     case "object":
       filteredData = Settings.filterElements(value, settings);
       const keys = Object.keys(filteredData);
-      if (keys.length === 1) {
+      if (collapseSingleKeys && keys.length === 1) {
         const nextKey = key ? `${key} | ${keys[0]}` : null;
         return renderJson(nextKey, filteredData[keys[0]], settings);
       }
