@@ -1,3 +1,5 @@
+import appError from "../appError";
+
 export let Settings = {
   root: "",
   nullAppearence: "null",
@@ -9,8 +11,16 @@ export let Settings = {
 };
 
 export const setSettings = (newSettings) => {
-  Settings = {
-    ...Settings,
-    ...newSettings,
-  };
+  try {
+    const parsed = newSettings
+      ? JSON.parse(newSettings.replace(/\/\/.*\n/g, ""))
+      : {};
+
+    Settings = {
+      ...Settings,
+      ...parsed,
+    };
+  } catch (err) {
+    appError.setError(err, "settings");
+  }
 };

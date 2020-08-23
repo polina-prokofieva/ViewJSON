@@ -2,6 +2,8 @@ import Search from "./Search";
 import FormAction from "./FormActions";
 import renderJson from "./View/Elements";
 import { Settings, setSettings } from "./Settings/Value";
+import { Data, setData } from "./Data";
+import appError from "./appError";
 
 export default class ViewJSON {
   constructor(el = document.body, json = "", settings = "") {
@@ -21,22 +23,15 @@ export default class ViewJSON {
     this.clearEvents = this.clearEvents.bind(this);
     this.clear = this.clear.bind(this);
 
-    try {
-      this.json = JSON.parse(json);
-      if (settings) {
-        this.settings = JSON.parse(settings.replace(/\/\/.*\n/g, ""));
-      }
-      setSettings(this.settings);
+    this.json = json;
+    this.settings = settings;
 
-      this.search = new Search(this);
-      this.form = new FormAction(this);
+    appError.unsetError();
 
-      this.state = 0; // 0 - json, 1 - search results
-      this.root = Settings.root || this.json;
-    } catch (err) {
-      this.errorMessage = err.message;
-      console.error(err);
-    }
+    this.search = new Search(this);
+    this.form = new FormAction(this);
+
+    this.state = 0; // 0 - json, 1 - search results
   }
 
   setState(newState) {
@@ -106,7 +101,7 @@ export default class ViewJSON {
   }
 
   generateJSON() {
-    const renderedJSON = renderJson(null, this.root);
+    const renderedJSON = renderJson(null, Data);
 
     this.mainElement.appendChild(renderedJSON);
     this.state = 0;
@@ -130,13 +125,6 @@ export default class ViewJSON {
   }
 
   render() {
-    if (Settings.root) {
-      let rootKeys = Settings.root.split("/");
-      for (let i = 0; i < rootKeys.length; i++) {
-        this.root = this.root[rootKeys[i]];
-      }
-    }
-
     this.generateJSON();
     this.generate();
 
@@ -145,22 +133,16 @@ export default class ViewJSON {
   }
 
   start() {
-    if (!this.el) {
-      console.error("Incorrect HTML element passed to class ViewJSON");
-      return;
-    }
-
-    if (!this.json) {
-      this.el.innerHTML = `<div id="jsonParseError"><p>There is an error in json file</p><p>Error message: ${this.errorMessage}</p></div>`;
-      return;
-    }
-
-    if (!this.settings) {
-      this.el.innerHTML = `<div id="jsonParseError"><p>There is an error in settings json</p><p>Error message: ${this.errorMessage}</p></div>`;
-      return;
-    }
+    setSettings(this.settings);
+    setData(this.json);
 
     this.el.innerHTML = "";
+
+    if (appError.isError) {
+      this.el.appendChild(appError.element);
+      return;
+    }
+
     this.mainElement = document.createElement("div");
     this.mainElement.id = this.mainId;
 

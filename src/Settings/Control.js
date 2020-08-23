@@ -53,10 +53,22 @@ const filterElements = (data) => {
   }
 };
 
+const setRoot = (data) => {
+  if (Settings.root) {
+    let rootKeys = Settings.root.split("/");
+    for (let i = 0; i < rootKeys.length; i++) {
+      data = data[rootKeys[i]];
+    }
+  }
+
+  return data;
+};
+
 export default {
   isHidePropertyByKey,
   isHidePropertyByValue,
   isAllInnerValuesHided,
   isShowProperty,
   filterElements,
+  setRoot,
 };

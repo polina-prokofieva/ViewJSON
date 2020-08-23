@@ -44,23 +44,23 @@ const renderJson = (key, value, options = {}) => {
 
   switch (type) {
     case "array":
-      filteredData = Control.filterElements(value);
+      value = Control.filterElements(value);
 
       if (arraysAsTable.includes(key)) {
-        valueElement = renderArrayToTable(filteredData);
+        valueElement = renderArrayToTable(value);
       } else {
-        if (collapseSingleKeys && filteredData.length === 1) {
-          return renderJson(key, filteredData[0]);
+        if (collapseSingleKeys && value.length === 1) {
+          return renderJson(key, value[0]);
         }
-        valueElement = renderArray(key, filteredData);
+        valueElement = renderArray(key, value);
       }
       break;
     case "object":
-      filteredData = Control.filterElements(value);
-      const keys = Object.keys(filteredData);
+      value = Control.filterElements(value);
+      const keys = Object.keys(value);
       if (collapseSingleKeys && keys.length === 1) {
         const nextKey = key ? `${key} | ${keys[0]}` : null;
-        return renderJson(nextKey, filteredData[keys[0]]);
+        return renderJson(nextKey, value[keys[0]]);
       }
       valueElement = renderObject(value);
       break;
