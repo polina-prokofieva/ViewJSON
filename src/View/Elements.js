@@ -134,7 +134,7 @@ const renderTableBody = (elements) => {
       if (item[key] === null) {
         value = nullAppearence;
       } else if (typeof item[key] === "object") {
-        value = "[Object]";
+        value = JSON.stringify(item[key]);
       } else if (typeof item[key] === "boolean") {
         value = boolAppearence[Number(item[key])];
       } else {
