@@ -66,6 +66,15 @@ const setRoot = (data) => {
   return data;
 };
 
+const isUniqueItem = (key, data) => {
+  for (let k = 0; k < key; k++) {
+    if (JSON.stringify(data1) === JSON.stringify(data2)) {
+      return false;
+    }
+  }
+  return true;
+};
+
 export default {
   isHidePropertyByKey,
   isHidePropertyByValue,
@@ -73,4 +82,5 @@ export default {
   isShowProperty,
   filterElements,
   setRoot,
+  isUniqueItem,
 };

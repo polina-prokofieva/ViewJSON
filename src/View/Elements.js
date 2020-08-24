@@ -83,10 +83,14 @@ const renderJson = (key, value, options = {}) => {
       break;
   }
 
-  if (key) {
-    const convertedKey = options.mask
-      ? Keys.convertByMask(value, options.mask)
-      : Keys.convertCamelCase(key);
+  if (key !== null) {
+    let convertedKey = key;
+
+    if (options.mask) {
+      convertedKey = Keys.convertByMask(value, options.mask);
+    } else if (typeof key === "string") {
+      convertedKey = Keys.convertCamelCase(key);
+    }
 
     const keyElement = Render.createSimpleDOMElement("span", convertedKey, {
       className: "key",
@@ -123,29 +127,32 @@ const renderTableBody = (elements) => {
   const body = document.createElement("tbody");
 
   for (let i = 0; i < elements.length; i++) {
-    const row = document.createElement("tr");
-    const item = elements[i];
+    if (!Settings.hideEqualItems || Control.isUniqueItem(i, elements)) {
+      const row = document.createElement("tr");
+      const item = elements[i];
 
-    for (let key in elements[i]) {
-      const cell = document.createElement("td");
-      let value = "";
+      for (let key in elements[i]) {
+        const cell = document.createElement("td");
+        let value = "";
 
-      if (item[key] === null) {
-        value = nullAppearence;
-      } else if (typeof item[key] === "object") {
-        value = renderJson(null, item[key]);
-        cell.appendChild(value);
-      } else if (typeof item[key] === "boolean") {
-        value = boolAppearence[Number(item[key])];
-        cell.textContent = value;
-      } else {
-        value = item[key];
-        cell.textContent = value;
+        if (item[key] === null) {
+          value = nullAppearence;
+        } else if (typeof item[key] === "object") {
+          value = renderJson(null, item[key]);
+          cell.appendChild(value);
+        } else if (typeof item[key] === "boolean") {
+          value = boolAppearence[Number(item[key])];
+          cell.textContent = value;
+        } else {
+          value = item[key];
+          cell.textContent = value;
+        }
+
+        row.appendChild(cell);
       }
 
-      row.appendChild(cell);
+      body.appendChild(row);
     }
-    body.appendChild(row);
   }
 
   return body;
@@ -195,16 +202,18 @@ const renderArray = (key, data) => {
   const listElement = document.createElement("ul");
   listElement.className = "arrayElements";
 
-  for (let innerKey in data) {
-    const itemElement = document.createElement("li");
-    const renderedValueElement = renderJson(innerKey, data[innerKey], {
-      mask: Settings.keysForArrays[key],
-    });
+  for (let i = 0; i < data.length; i++) {
+    if (!Settings.hideEqualItems || Control.isUniqueItem(i, data)) {
+      const itemElement = document.createElement("li");
+      const renderedValueElement = renderJson(i, data[i], {
+        mask: Settings.keysForArrays[key],
+      });
 
-    if (renderedValueElement) {
-      itemElement.className = "element";
-      itemElement.appendChild(renderedValueElement);
-      listElement.appendChild(itemElement);
+      if (renderedValueElement) {
+        itemElement.className = "element";
+        itemElement.appendChild(renderedValueElement);
+        listElement.appendChild(itemElement);
+      }
     }
   }
 
