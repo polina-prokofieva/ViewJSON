@@ -23,7 +23,7 @@ export default class FormAction {
     this.search.searchByKeyAndValue(evt);
   }
 
-  resetAction(evt) {
+  resetAction() {
     this.search.reset();
     this.viewJSON.generate();
   }

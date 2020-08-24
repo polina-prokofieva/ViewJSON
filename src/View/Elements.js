@@ -28,7 +28,6 @@ const renderJson = (key, value, options = {}) => {
   const { arraysAsTable, collapseSingleKeys } = Settings;
   const itemElement = document.createElement("div");
   let valueElement;
-  let filteredData;
 
   const type = defineTypeOfValue(value, key);
 
@@ -134,14 +133,16 @@ const renderTableBody = (elements) => {
       if (item[key] === null) {
         value = nullAppearence;
       } else if (typeof item[key] === "object") {
-        value = JSON.stringify(item[key]);
+        value = renderJson(null, item[key]);
+        cell.appendChild(value);
       } else if (typeof item[key] === "boolean") {
         value = boolAppearence[Number(item[key])];
+        cell.textContent = value;
       } else {
         value = item[key];
+        cell.textContent = value;
       }
 
-      cell.textContent = value;
       row.appendChild(cell);
     }
     body.appendChild(row);
