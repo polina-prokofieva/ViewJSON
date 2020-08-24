@@ -18,7 +18,32 @@
     </div>
     <form id="demo">
       <p>Please, insert json for parse here:</p>
-      <textarea rows="5" cols="45" name="text"></textarea><br />
+      <textarea rows="5" cols="45" name="text">
+{
+        "USOtherNames": [{
+                                "code": "FN",
+                                "description": "Former Name",
+                                "LastName": null,
+                                "FirstName": null,
+                                "MiddleName": null,
+                                "NameSuffix": null
+                            }, {
+                                "code": "FN",
+                                "description": "Former Name",
+                                "LastName": null,
+                                "FirstName": null,
+                                "MiddleName": null,
+                                "NameSuffix": null
+                            }, {
+                                "code": "FN",
+                                "description": "Former Name",
+                                "LastName": null,
+                                "FirstName": null,
+                                "MiddleName": null,
+                                "NameSuffix": null
+                            }]
+        }</textarea
+      ><br />
 
       <p>Settings (json):</p>
       <textarea rows="5" cols="45" name="text">
@@ -39,8 +64,7 @@
             ""
           ],
 
-          "hideEmptyArrays": true,
-          "hideEmptyObjects": true,
+          "hideEmptyObjectsAndArrays": true,
         
           "hidePropertiesByKey": [ //array of keys by which will be hided parameters of your json.
             "ExpandedDataReturned",

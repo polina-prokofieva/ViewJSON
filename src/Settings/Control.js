@@ -3,12 +3,14 @@ import { Settings } from "./Value";
 const isHidePropertyByKey = (key) => Settings.hidePropertiesByKey.includes(key);
 
 const isHideEmptyArrays = (value) =>
-  Array.isArray(value) && Settings.hideEmptyArrays && value.length === 0;
+  Array.isArray(value) &&
+  Settings.hideEmptyObjectsAndArrays &&
+  value.length === 0;
 
 const isHideEmptyObjects = (value) =>
   typeof value === "object" &&
   value !== null &&
-  Settings.hideEmptyObjects &&
+  Settings.hideEmptyObjectsAndArrays &&
   Object.keys(value).length === 0;
 
 const isHidePropertyByValue = (value) =>
