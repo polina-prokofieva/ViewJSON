@@ -159,16 +159,18 @@ const renderTableBody = (elements) => {
 };
 
 const removeColumnsByAllValues = (rows) => {
-  let cleanedRow = [...rows];
+  const cleanedRow = [...rows];
   const firstRow = cleanedRow[0];
-  const keysToDelete = Object.keys(firstRow);
+  const keys = Object.keys(firstRow);
+  const keysToDelete = [];
 
   for (let i = 0; i < rows.length; i++) {
-    for (let key of keysToDelete) {
-      if (!Control.isHidePropertyByKey(key)) {
-        if (Control.isShowProperty(rows[i][key])) {
-          keysToDelete.splice(keysToDelete.indexOf(key), 1);
-        }
+    for (let key of keys) {
+      if (
+        Control.isHidePropertyByKey(key) ||
+        !Control.isShowProperty(rows[i][key])
+      ) {
+        keysToDelete.push(key);
       }
     }
   }
