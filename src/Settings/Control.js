@@ -68,7 +68,7 @@ const setRoot = (data) => {
 
 const isUniqueItem = (key, data) => {
   for (let k = 0; k < key; k++) {
-    if (JSON.stringify(data1) === JSON.stringify(data2)) {
+    if (JSON.stringify(data[key]) === JSON.stringify(data[k])) {
       return false;
     }
   }
