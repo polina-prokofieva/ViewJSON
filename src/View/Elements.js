@@ -1,5 +1,5 @@
 import Render from "./Render";
-import Keys from "../Keys";
+import Keys from "../Settings/Keys";
 import Control from "../Settings/Control";
 import { Settings } from "../Settings/Value";
 

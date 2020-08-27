@@ -20,28 +20,18 @@
       <p>Please, insert json for parse here:</p>
       <textarea rows="5" cols="45" name="text">
 {
-        "USOtherNames": [{
-                                "code": "FN",
-                                "description": "Former Name",
-                                "LastName": null,
-                                "FirstName": null,
-                                "MiddleName": null,
-                                "NameSuffix": null
-                            }, {
-                                "code": "FN",
-                                "description": "Former Name",
-                                "LastName": null,
-                                "FirstName": null,
-                                "MiddleName": null,
-                                "NameSuffix": null
-                            }, {
-                                "code": "FN",
-                                "description": "Former Name",
-                                "LastName": null,
-                                "FirstName": null,
-                                "MiddleName": null,
-                                "NameSuffix": null
-                            }]
+  "something": true,
+  "headerRecord": [
+  {
+  "reportDate": "082120",
+  "reportTime": "113636",
+  "preamble": "TRSM",
+  "versionNo": "07",
+  "mKeywordLength": "10",
+  "mKeywordText": "TEST082020",
+  "y2kReportedDate": "08212020"
+  }
+  ]
         }</textarea
       ><br />
 
@@ -65,6 +55,8 @@
           ],
 
           "hideEmptyObjectsAndArrays": true,
+
+          "hideEqualItems": true,
         
           "hidePropertiesByKey": [ //array of keys by which will be hided parameters of your json.
             "ExpandedDataReturned",
@@ -82,7 +74,7 @@
           "showSearchPanel" : true, //show or not search panel.
                     
           "arraysAsTable": [ //array of keys of parameters which contain an array and which will be presented as a table.
-            "USCollections"
+            "headerRecord"
           ],
           "keysForArrays": { //an abject where keys are names of arrays and values are properties which will be shown as keys for corresponding arrays.
             "accounts": "{meta.name} {type} {meta.limit}"
