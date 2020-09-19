@@ -58,7 +58,11 @@ const renderJson = (key, value, options = {}) => {
     case "object":
       value = Control.filterElements(value);
       const keys = Object.keys(value);
-      if (collapseSingleKeys && keys.length === 1) {
+      if (
+        collapseSingleKeys &&
+        keys.length === 1 &&
+        typeof value[keys[0]] === "object"
+      ) {
         const nextKey = key ? `${key} | ${keys[0]}` : null;
 
         if (arraysAsTable.includes(keys[0])) {
